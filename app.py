@@ -1,11 +1,4 @@
 import streamlit as st
-st.title("Coucou mon chéri !!")
-st.markdown(
-    """ 
 
- regarde ce que je peux faire avec Streamlit !
-    """
-)
-
-if st.button("Send balloons!"):
-    st.balloons()
+st.title("📊 Main Dashboard")
+st.write("Welcome to the main page!")
