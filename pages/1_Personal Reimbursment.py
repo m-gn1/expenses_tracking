@@ -1,12 +1,26 @@
 import streamlit as st
 import pandas as pd
-from utils.data_loader import load_expenses, load_data, filter_by_date
+from utils.data_loader import load_data, filter_by_date
 
 
 # Define variables
 # --- Load data ---
 
 df = load_data()
+
+st.dataframe(df)
+
+if "full_df" in st.session_state:
+    df1 = st.session_state["full_df"]
+
+    st.subheader("Aperçu des données chargées :")
+    st.dataframe(df1)
+
+    # Tu peux maintenant faire tous tes filtres, visualisations, etc.
+else:
+    st.warning("Aucune donnée n'a encore été chargée. Va d'abord dans l'onglet 'Data'.")
+
+### Title and description
 
 st.title("💸 Personal Reimbursement to the Common Pot")
 st.write("Select a date range to see how much each person needs to pay back to the shared pot (excluding shared expenses).")

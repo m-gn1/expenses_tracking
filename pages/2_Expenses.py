@@ -2,13 +2,14 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import altair as alt
-from utils.data_loader import load_expenses, load_data, filter_by_date
+from utils.data_loader import load_data, filter_dataframe_categoriel, add_month
 
 
 # Load the cleaned data
 
 
-df = load_expenses()
+df = load_data()
+df = add_month(df, "date")
 
 st.title("Voici nos depenses")
 
@@ -32,10 +33,14 @@ selected_users = st.sidebar.multiselect(
 
 
 # --- Apply filters ---
-filtered_df = df[
-    (df["month"].isin(selected_months)) &
-    (df["user"].isin(selected_users))
-]
+
+filters = {
+    "month": selected_months,
+    "user": selected_users,
+}
+
+filtered_df = filter_dataframe_categoriel(df, filters)
+
 
 # --- Aggregate data ---
 # --- Group by month + category ---
