@@ -8,17 +8,9 @@ from utils.data_loader import load_expenses, load_data, filter_by_date
 # Load the cleaned data
 
 
-
 df = load_expenses()
 
-
 st.title("Voici nos depenses")
-st.markdown(
-    """ 
-
- regarde ce que je peux faire avec Streamlit !
-    """
-)
 
 # --- Filtres interactifs ---
 st.sidebar.header("Filters")
@@ -38,6 +30,7 @@ selected_users = st.sidebar.multiselect(
     default=available_users
 )
 
+
 # --- Apply filters ---
 filtered_df = df[
     (df["month"].isin(selected_months)) &
@@ -45,15 +38,22 @@ filtered_df = df[
 ]
 
 # --- Aggregate data ---
-grouped_df = filtered_df.groupby(["month", "user"], as_index=False)["amount"].sum()
+# --- Group by month + category ---
+monthly_by_category = (
+    filtered_df
+    .groupby(["month", "category"], as_index=False)
+    .agg({"amount": "sum"})
+)
 
+monthly_users = (
+    filtered_df
+    .groupby(["month", "user"], as_index=False)
+    .agg({"amount": "sum"})
+)
 
-
-# --- Aggregate data ---
-grouped_df = filtered_df.groupby(["month", "user"], as_index=False)["amount"].sum()
 
 # --- Altair chart ---
-chart = alt.Chart(grouped_df).mark_bar().encode(
+chart1 = alt.Chart(monthly_users).mark_bar().encode(
     x=alt.X("month:N", title="Month", sort=available_months),
     y=alt.Y("amount:Q", title="Total amount (£)"),
     color="user:N",
@@ -64,8 +64,19 @@ chart = alt.Chart(grouped_df).mark_bar().encode(
     height=400
 )
 
-st.altair_chart(chart, use_container_width=True)
+chart2 = alt.Chart(monthly_by_category).mark_bar().encode(
+    x=alt.X("month:N", title="Month", axis=alt.Axis(labelAngle=0)),
+    y=alt.Y("amount:Q", title="Total Amount (£)"),
+    color=alt.Color("category:N", title="Category"),
+    xOffset="category:N",  # 🔑 CLÉ POUR GROUPÉ
+    tooltip=["month", "category", "amount"]
+).properties(
+    width=700,
+    height=400,
+    title="💰 Monthly Expenses by Category (Grouped)"
+)
 
-# --- Optional table display ---
-with st.expander("Show aggregated data"):
-    st.dataframe(grouped_df)
+
+st.altair_chart(chart1, use_container_width=True)
+st.altair_chart(chart2, use_container_width=True)
+
