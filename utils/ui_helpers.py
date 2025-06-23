@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+import base64
 from utils.data_loader import extract_all_transactions, extract_cardholder_refs
 
 
@@ -94,3 +95,95 @@ def assign_missing_users(full_df_key="full_df", cardholders_key="cardholders"):
         st.session_state[full_df_key] = full_df.copy()
         st.session_state["affectation_success"] = True
         st.rerun()
+
+
+def show_quick_checks(df, balance, due_date):
+    total_expenses = df["amount"].sum()
+    min_date = df["date"].min().date()
+    max_date = df["date"].max().date()
+    balance_value = list(balance.values())[0]
+    due_value = list(due_date.values())[0]
+
+    st.markdown(f"""
+<div style="border-radius: 8px; padding: 1em; background-color: rgba(0, 123, 255, 0.1);">
+    <div>🔎 Quick Checks<div>
+    <div style="height: 0.7em;"></div>
+    </div>
+    <div style="display: flex; justify-content: start; gap: 11em;">
+        <div>💰 <strong>Total expenses:</strong> {total_expenses:.2f}£</div>
+        <div>💰 <strong>Balance from PDF:</strong> {balance_value}£</div>
+    </div>
+    <div style="display: flex; justify-content: start; gap: 9em; margin-top: 0.5em;">
+        <div>📅 <strong>From:</strong> {min_date} → {max_date}</div>
+        <div>📅 <strong>Due date:</strong> {due_value}</div>
+    </div>
+</div>
+    """, unsafe_allow_html=True)
+
+def pdf_display(pdf_path):
+    """
+    Display a PDF file in Streamlit.
+    """
+    with open(pdf_path, "rb") as f:
+        base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+
+    pdf_display = f"""
+    <iframe 
+        src="data:application/pdf;base64,{base64_pdf}" 
+        width="100%" 
+        height="300px" 
+        type="application/pdf"
+        style="border: 1px solid #ccc; border-radius: 8px;"
+    ></iframe>
+"""    
+    st.markdown(pdf_display, unsafe_allow_html=True)
+
+
+def quick_checks(df, balance, due_date):
+    total_expenses = df["amount"].sum()
+    min_date = df["date"].min().date()
+    max_date = df["date"].max().date()
+    balance_value = list(balance.values())[0]
+    due_value = list(due_date.values())[0]
+
+
+    st.markdown(f"""
+<div style="border-radius: 8px; padding: 1em; background-color: rgba(0, 123, 255, 0.1);">
+    <div>🔎 Quick Checks<div>
+    <div style="height: 0.7em;"></div>
+    </div>
+    <div style="display: flex; justify-content: start; gap: 11em;">
+        <div>💰 <strong>Total expenses:</strong> {total_expenses:.2f}£</div>
+        <div>💰 <strong>Balance from PDF:</strong> {balance_value}£</div>
+    </div>
+    <div style="display: flex; justify-content: start; gap: 9em; margin-top: 0.5em;">
+        <div>📅 <strong>From:</strong> {min_date} → {max_date}</div>
+        <div>📅 <strong>Due date:</strong> {due_value}</div>
+    </div>
+    <div style="height: 0.7em;"></div>
+    </div>
+</div>
+    """, unsafe_allow_html=True)
+
+    is_fee_adjusted_match(total_expenses, balance_value)
+
+def is_fee_adjusted_match(total_expenses, balance_value, fee=20):
+    """
+    Vérifie si le solde correspond aux dépenses + un éventuel frais fixe.
+
+    Retourne True uniquement si balance = total_expenses + fee (arrondis à 2 décimales).
+    """
+    if round(total_expenses, 2) == round(balance_value, 2):
+        st.success("✅ Le solde correspond aux dépenses totales.")
+        return False  # condition 1
+    elif round(balance_value, 2) == round(total_expenses + fee, 2):
+        st.info("ℹ️ Le solde correspond aux dépenses totales + un frais de {fee}£.")
+        return True   # condition 2
+    else:
+        st.error("❌ Le solde ne correspond pas aux dépenses totales ni aux dépenses + frais.")
+        return False  # condition 3
+
+
+
+
+
