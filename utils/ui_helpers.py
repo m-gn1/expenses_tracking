@@ -165,19 +165,21 @@ def quick_checks(df, balance, due_date):
 </div>
     """, unsafe_allow_html=True)
 
-    is_fee_adjusted_match(total_expenses, balance_value)
 
-def is_fee_adjusted_match(total_expenses, balance_value, fee=20):
+def is_fee_adjusted_match(df, balance, fee=20):
+    total_expenses = round(df["amount"].sum(), 2)
+    balance_value = round(list(balance.values())[0],2)
+    
     """
     Vérifie si le solde correspond aux dépenses + un éventuel frais fixe.
 
     Retourne True uniquement si balance = total_expenses + fee (arrondis à 2 décimales).
     """
-    if round(total_expenses, 2) == round(balance_value, 2):
+    if total_expenses == balance_value:
         st.success("✅ Le solde correspond aux dépenses totales.")
         return False  # condition 1
-    elif round(balance_value, 2) == round(total_expenses + fee, 2):
-        st.info("ℹ️ Le solde correspond aux dépenses totales + un frais de {fee}£.")
+    elif balance_value == total_expenses + fee:
+        st.info(f"ℹ️ Le solde correspond aux dépenses totales + un frais de {fee}£.")
         return True   # condition 2
     else:
         st.error("❌ Le solde ne correspond pas aux dépenses totales ni aux dépenses + frais.")
