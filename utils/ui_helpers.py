@@ -94,7 +94,7 @@ def assign_missing_users(full_df_key="full_df", cardholders_key="cardholders"):
 
         st.session_state[full_df_key] = full_df.copy()
         st.session_state["affectation_success"] = True
-        st.rerun()
+        st.session_state["refresh_after_affectation"] = True
 
 
 def show_quick_checks(df, balance, due_date):

@@ -19,6 +19,10 @@ def list_files(RAW_FOLDER, PROCESSED_FOLDER):
     processed_files = [f.replace(".csv", ".pdf") for f in os.listdir(PROCESSED_FOLDER) if f.endswith(".csv")]
     return raw_files, processed_files
 
+def list_processed_files(PROCESSED_FOLDER):
+    processed_files = [f for f in os.listdir(PROCESSED_FOLDER) if f.lower().endswith(".csv")]
+    return processed_files
+
 def process_pdf_file(PROCESSED_FOLDER, file):
     if st.session_state.get("active_file") != file:
         return
@@ -27,16 +31,21 @@ def process_pdf_file(PROCESSED_FOLDER, file):
     if df_temp is None:
         return
     
-    assign_missing_users(full_df_key="df_to_process", cardholders_key="cardholders")
+    #assign_missing_users(full_df_key="df_to_process", cardholders_key="cardholders")
 
     df_temp = st.session_state.get("df_to_process")
-    if df_temp is not None and df_temp["user"].notna().all():
-        if st.button("💾 Sauvegarder ce fichier validé", key=f"save_{file}"):
-            output_path = os.path.join(PROCESSED_FOLDER, file.replace(".pdf", ".csv"))
-            df_temp.to_csv(output_path, index=False)
-            st.success(f"Fichier sauvegardé dans {output_path}")
-            del st.session_state["df_to_process"]
-            del st.session_state["active_file"]
+    if df_temp is not None:# and df_temp["user"].notna().all():
+        if df_temp["user"].notna().all():
+            if st.button("💾 Sauvegarder ce fichier validé", key=f"save_{file}"):
+                output_path = os.path.join(PROCESSED_FOLDER, file.replace(".pdf", ".csv"))
+                df_temp.to_csv(output_path, index=False)
+                st.success(f"Fichier sauvegardé dans {output_path}")
+                del st.session_state["df_to_process"]
+                del st.session_state["active_file"]
+        else:
+            st.warning("Veuillez affecter les utilisateurs manquants avant de sauvegarder.")
+            st.dataframe(df_temp, use_container_width=True)
+            st.page_link("pages/9999_TEST.py", label="➡️ Aller à l’attribution", icon="👤")
             st.rerun()
 
 
