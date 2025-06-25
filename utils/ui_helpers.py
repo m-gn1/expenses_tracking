@@ -8,6 +8,13 @@ from utils.data_loader import extract_all_transactions, extract_cardholder_refs
 def get_pdf_files(folder_path):
     return [f for f in os.listdir(folder_path) if f.lower().endswith(".pdf")]
 
+def get_csv_files(folder_path):
+    return [f for f in os.listdir(folder_path) if f.lower().endswith(".csv")]
+
+def bank_get_csv_files(folder_path):
+    return [f for f in os.listdir(folder_path) if f.lower().endswith(".csv")]
+
+
 def display_file_selection(files):
     return st.multiselect("📂 Sélectionne les fichiers PDF :", files)
 

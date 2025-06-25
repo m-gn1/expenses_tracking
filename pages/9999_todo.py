@@ -1,12 +1,8 @@
 import streamlit as st
 
-st.write("Personal reimbursement page: on peut utiliser la fonction extract sans user pour avoir le total avec la membership")
 st.write("potentiellement probleme de sommme dans fichier 2")
 
 
 
-st.write("gestion des users, ajouter une page spéciale pour l'attribution des users, et l'enlever de la page d'extraction")
-
-st.write("implémenter framework de catégorisation.")
-
-st.write("gérer cle API open AI avant commit")
+st.write("gerer le bug de liste, encapsuler les fonctions. S'assurer de ne pas dupliquer les donénes. Ajouter un ID de transaction?")
+st.write("implémenter framework de catégorisation. Potentillement avant l'assignation des users pour gérer les fichiers 1 par 1? d'un coté on est censé utiliser un par un de base. ")
