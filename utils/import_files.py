@@ -23,7 +23,7 @@ def list_processed_files(PROCESSED_FOLDER):
     processed_files = [f for f in os.listdir(PROCESSED_FOLDER) if f.lower().endswith(".csv")]
     return processed_files
 
-def process_pdf_file(PROCESSED_FOLDER, file):
+def import_pdf_file(PROCESSED_FOLDER, file):
     if st.session_state.get("active_file") != file:
         return
 
@@ -37,18 +37,19 @@ def process_pdf_file(PROCESSED_FOLDER, file):
 
     df_temp = st.session_state.get("df_to_process")
     if df_temp is not None:# and df_temp["user"].notna().all():
-        if df_temp["user"].notna().all():
-            if st.button("💾 Sauvegarder ce fichier validé", key=f"save_{file}"):
-                output_path = os.path.join(PROCESSED_FOLDER, file.replace(".pdf", ".csv"))
-                df_temp.to_csv(output_path, index=False)
-                st.success(f"Fichier sauvegardé dans {output_path}")
-                del st.session_state["df_to_process"]
-                del st.session_state["active_file"]
-        else:
-            st.warning("Veuillez affecter les utilisateurs manquants avant de sauvegarder.")
-            #st.dataframe(df_temp, use_container_width=True)
-            st.page_link("pages/9999_TEST.py", label="➡️ Aller à l’attribution", icon="👤")
+        #if df_temp["user"].notna().all():
+        if st.button("💾 Sauvegarder ce fichier validé", key=f"save_{file}"):
+            output_path = os.path.join(PROCESSED_FOLDER, file.replace(".pdf", ".csv"))
+            df_temp.to_csv(output_path, index=False)
+            st.success(f"Fichier sauvegardé dans {output_path}")
+            del st.session_state["df_to_process"]
+            del st.session_state["active_file"]
             st.rerun()
+        # else:
+        #     st.warning("Veuillez affecter les utilisateurs manquants avant de sauvegarder.")
+        #     #st.dataframe(df_temp, use_container_width=True)
+        #     st.page_link("pages/9999_TEST.py", label="➡️ Aller à l’attribution", icon="👤")
+        #     st.rerun()
 
 
 def display_processed_summary(PROCESSED_FOLDER):
@@ -84,13 +85,14 @@ def save_processed_files(PROCESSED_FOLDER):
 
 
 def display_file_processing_block(RAW_FOLDER, file, is_done):
-    st.subheader(f"🗂 {file}")
 
     if is_done:
         st.subheader(f"🗂 {file}")
         st.success("✅ Déjà traité")
         return
     
+    st.subheader(f"🗂 {file}")
+
     with st.expander("🔧 Traiter ce fichier", expanded=True):
         path = os.path.join(RAW_FOLDER, file)
         pdf_display(path)
@@ -111,13 +113,23 @@ def display_file_processing_block(RAW_FOLDER, file, is_done):
 
         handle_fee_adjustment_button(file)
 
+        df = st.session_state[f"df_{file}"]
+
         if st.session_state.get(f"show_df_{file}", False):
-            st.caption("")
+            df = st.session_state[f"df_{file}"]
+
+            # ✅ Affiche le message de succès si présent
+            if st.session_state.get(f"fee_adjusted_success_{file}", False):
+                st.success("✅ Les frais ajustés ont été ajoutés.")
+                del st.session_state[f"fee_adjusted_success_{file}"]
+
+            st.caption("📊 Données extraites :")
             st.dataframe(df, use_container_width=True)
+            st.session_state["df_to_process"] = df
+
 
         st.session_state["df_to_process"] = df
         st.session_state["active_file"] = file
-
 
 
 def handle_extraction_button(file, path, has_user):
@@ -147,6 +159,14 @@ def handle_fee_adjustment_button(file):
                 "source_file": file,
             }])
             df = pd.concat([df, new_row], ignore_index=True)
-            st.success("✅ Les frais ajustés ont été ajoutés.")
+            # st.session_state[f"df_{file}"] = df
+            # st.session_state[f"show_df_{file}"] = True  # Confirme qu'on souhaite afficher le df
+            # st.success("✅ Les frais ajustés ont été ajoutés.")
+            # st.rerun()
+            st.session_state["df_to_process"] = df
             st.session_state[f"df_{file}"] = df
-            st.session_state[f"show_df_{file}"] = False
+            st.session_state[f"show_df_{file}"] = True
+            st.session_state[f"fee_adjusted_success_{file}"] = True  # 🔥 flag temporaire
+            st.rerun()
+
+
