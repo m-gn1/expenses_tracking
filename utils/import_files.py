@@ -33,6 +33,8 @@ def process_pdf_file(PROCESSED_FOLDER, file):
     
     #assign_missing_users(full_df_key="df_to_process", cardholders_key="cardholders")
 
+    # todo: remove the if, concat the df processed, if one NA in user, go to attribution.
+
     df_temp = st.session_state.get("df_to_process")
     if df_temp is not None:# and df_temp["user"].notna().all():
         if df_temp["user"].notna().all():
@@ -44,7 +46,7 @@ def process_pdf_file(PROCESSED_FOLDER, file):
                 del st.session_state["active_file"]
         else:
             st.warning("Veuillez affecter les utilisateurs manquants avant de sauvegarder.")
-            st.dataframe(df_temp, use_container_width=True)
+            #st.dataframe(df_temp, use_container_width=True)
             st.page_link("pages/9999_TEST.py", label="➡️ Aller à l’attribution", icon="👤")
             st.rerun()
 
@@ -81,64 +83,70 @@ def save_processed_files(PROCESSED_FOLDER):
         del st.session_state["full_df"]
 
 
-
 def display_file_processing_block(RAW_FOLDER, file, is_done):
+    st.subheader(f"🗂 {file}")
+
     if is_done:
         st.subheader(f"🗂 {file}")
         st.success("✅ Déjà traité")
         return
-
-    st.subheader(f"🗂 {file}")
+    
     with st.expander("🔧 Traiter ce fichier", expanded=True):
         path = os.path.join(RAW_FOLDER, file)
         pdf_display(path)
+
         has_user = st.checkbox("Contient la section 'Cardholders and their references' ?", key=f"user_col_{file}")
 
-        if st.button("🔍 Extraire et afficher les données", key=f"extract_{file}"):
-            df = extract_all_transactions(path, has_user=has_user)
-            df["source_file"] = file
-            balance, due_date = extract_balance_due_date(path)
+        handle_extraction_button(file, path, has_user)
 
-            # Store in session
-            st.session_state[f"df_{file}"] = df
-            st.session_state[f"balance_{file}"] = balance
-            st.session_state[f"due_{file}"] = due_date
-            st.session_state[f"has_user_{file}"] = has_user
-            st.session_state[f"extracted_{file}"] = True
+                # Suite logique après extraction
+        if not st.session_state.get(f"extracted_{file}", False):
+            return
 
-        # Bloc toujours visible si extraction a eu lieu
-        if st.session_state.get(f"extracted_{file}", False):
-            df = st.session_state[f"df_{file}"]
-            balance = st.session_state[f"balance_{file}"]
-            due_date = st.session_state[f"due_{file}"]
+        df = st.session_state[f"df_{file}"]
+        balance = st.session_state[f"balance_{file}"]
+        due_date = st.session_state[f"due_{file}"]
 
-            quick_checks(df, balance, due_date)
+        quick_checks(df, balance, due_date)
 
-            if is_fee_adjusted_match(df, balance):
-                if st.button("✅ Ajuster les frais", key=f"fee_match_{file}"):
-                    # DataFrame existant
-                    new_row = pd.DataFrame([{
-                        "date": df["date"].max(),
-                        "amount": 20, 
-                        "description": "Monthly Membership Fee ",
-                        "source_file": file,
-                    }])
-                    df = st.session_state[f"df_{file}"]
-                    df = pd.concat([df, new_row], ignore_index=True)
-                    st.success("✅ Les frais ajustés correspondent au solde.")
-                    st.session_state[f"df_{file}"] = df
+        handle_fee_adjustment_button(file)
 
-
+        if st.session_state.get(f"show_df_{file}", False):
             st.caption("")
             st.dataframe(df, use_container_width=True)
 
-            if st.session_state[f"has_user_{file}"]:
-                cardholders = extract_cardholder_refs(path)
-                df["user"] = None
-                st.session_state["cardholders"] = list(cardholders.values())
-            else:
-                df["user"] = "Foyer"
-                st.session_state["cardholders"] = []
+        st.session_state["df_to_process"] = df
+        st.session_state["active_file"] = file
 
-            st.session_state["df_to_process"] = df
-            st.session_state["active_file"] = file
+
+
+def handle_extraction_button(file, path, has_user):
+    if st.button("🔍 Extraire et afficher les données", key=f"extract_{file}"):
+        df = extract_all_transactions(path, has_user=has_user)
+        df["source_file"] = file
+        balance, due_date = extract_balance_due_date(path)
+
+        st.session_state[f"df_{file}"] = df
+        st.session_state[f"balance_{file}"] = balance
+        st.session_state[f"due_{file}"] = due_date
+        st.session_state[f"has_user_{file}"] = has_user
+        st.session_state[f"extracted_{file}"] = True
+        st.session_state[f"show_df_{file}"] = True
+
+
+def handle_fee_adjustment_button(file):
+    df = st.session_state[f"df_{file}"]
+    balance = st.session_state[f"balance_{file}"]
+
+    if is_fee_adjusted_match(df, balance):
+        if st.button("✅ Ajuster les frais", key=f"fee_match_{file}"):
+            new_row = pd.DataFrame([{
+                "date": df["date"].max(),
+                "amount": 20,
+                "description": "Monthly Membership Fee",
+                "source_file": file,
+            }])
+            df = pd.concat([df, new_row], ignore_index=True)
+            st.success("✅ Les frais ajustés ont été ajoutés.")
+            st.session_state[f"df_{file}"] = df
+            st.session_state[f"show_df_{file}"] = False

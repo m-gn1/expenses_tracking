@@ -304,7 +304,7 @@ def extract_all_transactions(pdf_path, has_user):
         df["user"] = None
     else:
         df["cardholder"] = "commun"
-        df["user"] = "Foyer"
+        df["user"] = None
 
     return df[colonnes]
 
