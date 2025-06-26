@@ -1,5 +1,10 @@
-import pandas as pd
-import os
+print("🔍 Chargement du module helpers")
+
+try:
+    import pandas as pd
+    import os
+except Exception as e:
+    print("💥 Erreur d'import :", e)
 
 def concat_dataframes(*dfs):
     """
@@ -28,10 +33,17 @@ def concat_dataframes(*dfs):
     return pd.concat(dfs, axis=0, ignore_index=True)
 
 def check_if_existing_processed_file(processed_path, name_df):
-    L = []
     path_df = os.path.join(processed_path, name_df)
     if os.path.exists(path_df):
         df = pd.read_csv(path_df)
-        L.append(df)
-    
-    return L
+        return df
+    else:
+        return None
+
+# def save_csv_move_pdf(IMPORTED_FOLDER, NEW_PDF, PROCESSED_PDF,file, df):
+#     output_path = os.path.join(IMPORTED_FOLDER, file.replace(".pdf", ".csv"))
+#     df.to_csv(output_path, index=False)
+#     st.success(f"Fichier sauvegardé dans {output_path}")
+#     # source = os.path.join(NEW_PDF, file)
+#     # destination = os.path.join("./nouveau/dossier", file)
+#     # shutil.move(source, destination)

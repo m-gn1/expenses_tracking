@@ -1,8 +1,13 @@
-import streamlit as st
-import pandas as pd
-import os
-import base64
-from utils.data_loader import extract_all_transactions, extract_cardholder_refs
+print("🔍 Chargement du module ui_helpers")
+
+try:
+    import streamlit as st
+    import pandas as pd
+    import os
+    import base64
+    #from utils.data_loader import extract_all_transactions, extract_cardholder_refs
+except Exception as e:
+    print("💥 Erreur d'import :", e)
 
 
 def get_pdf_files(folder_path):
@@ -30,27 +35,27 @@ def get_extraction_options(files):
             options[file] = has_user
     return options
 
-def extract_selected_data(selected_files, options, folder):
-    dfs = []
-    all_cardholders = set()
+# def extract_selected_data(selected_files, options, folder):
+#     dfs = []
+#     all_cardholders = set()
 
-    for file in selected_files:
-        path = os.path.join(folder, file)
-        has_user = options[file]
+#     for file in selected_files:
+#         path = os.path.join(folder, file)
+#         has_user = options[file]
 
-        df = extract_all_transactions(path, has_user=has_user)
-        df["source_file"] = file
+#         df = extract_all_transactions(path, has_user=has_user)
+#         df["source_file"] = file
 
-        if has_user:
-            cardholders = extract_cardholder_refs(path)
-            all_cardholders.update(cardholders.values())
-            df["user"] = None  # à compléter manuellement
-        else:
-            df["user"] = "foyer"
+#         if has_user:
+#             cardholders = extract_cardholder_refs(path)
+#             all_cardholders.update(cardholders.values())
+#             df["user"] = None  # à compléter manuellement
+#         else:
+#             df["user"] = "foyer"
 
-        dfs.append(df)
+#         dfs.append(df)
 
-    return dfs, all_cardholders
+#     return dfs, all_cardholders
 
 ### TO DO : key cardholder ne fonctionnne pas, verfiier le session. state #####
 
@@ -134,7 +139,7 @@ def pdf_display(pdf_path):
     with open(pdf_path, "rb") as f:
         base64_pdf = base64.b64encode(f.read()).decode('utf-8')
 
-    pdf_display = f"""
+    display_module = f"""
     <iframe 
         src="data:application/pdf;base64,{base64_pdf}" 
         width="100%" 
@@ -143,7 +148,7 @@ def pdf_display(pdf_path):
         style="border: 1px solid #ccc; border-radius: 8px;"
     ></iframe>
 """    
-    st.markdown(pdf_display, unsafe_allow_html=True)
+    st.markdown(display_module, unsafe_allow_html=True)
 
 
 def quick_checks(df, balance, due_date):

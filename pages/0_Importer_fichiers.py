@@ -1,36 +1,45 @@
 import streamlit as st
 import pandas as pd
-from utils.import_files import list_files, display_file_processing_block, import_pdf_file, display_processed_summary, save_processed_files
+from utils.import_files import list_pdf_files, list_files, display_file_processing_block, import_pdf_file, display_processed_summary, save_processed_files
 
-RAW_FOLDER = "./data/raw"
+NEW_PDF = "./data/new_pdf"
 IMPORTED_FOLDER = "./data/imported_data"
+PROCESSED_PDF = "./data/processed_pdf"
 
+new_pdf, processed_pdf = list_pdf_files(NEW_PDF, PROCESSED_PDF)
 
 st.title("📦 Monthly Ingestion of pdf files")
 
-raw_files, imported_files = list_files(RAW_FOLDER, IMPORTED_FOLDER)
+raw_files, imported_files = list_files(NEW_PDF, IMPORTED_FOLDER)
 if not raw_files:
-    st.warning("Aucun fichier PDF trouvé dans data/raw/")
+    st.warning("Aucun fichier PDF trouvé dans data/new_pdf/")
     st.stop()
 
-for file in raw_files:
+for file in new_pdf:
     st.session_state.setdefault(f"extracted_{file}", False)
-    is_done = file in imported_files
-    display_file_processing_block(RAW_FOLDER, file, is_done)
+    is_done = file in processed_pdf
+    display_file_processing_block(NEW_PDF, file, is_done)
 
 #Une fois tous les blocs affichés
 active_file = st.session_state.get("active_file")
 if active_file:
-    import_pdf_file(IMPORTED_FOLDER, active_file)
+    import_pdf_file(IMPORTED_FOLDER, NEW_PDF, PROCESSED_PDF, active_file)
+
+if all(file in processed_pdf for file in new_pdf):
+    st.success("✅ Tous les fichiers présents dans `data/new_pdf/` ont été traités et sauvegardés, prêt pour l'attribution")
+    st.page_link("pages/1_Attribute_users.py", label="➡️ Aller à l’attribution", icon="👤")
+else:
+    missing = [file for file in new_pdf if file not in processed_pdf]
+    st.warning(f"⚠️ Il reste {len(missing)} fichier(s) à extraire : {', '.join(missing)}")
 
 ## si tous les fichiers ont été procesées
-raw_files_end, imported_files_end = list_files(RAW_FOLDER, IMPORTED_FOLDER)
-if all(file in imported_files_end for file in raw_files_end):
-    st.success("✅ Tous les fichiers présents dans `data/raw/` ont été traités et sauvegardés.")
-    st.page_link("pages/1_Attribute_users.py", label="➡️ Aller à l’attribution", icon="👤")
+# raw_files_end, imported_files_end = list_files(NEW_PDF, IMPORTED_FOLDER)
+# if all(file in imported_files_end for file in raw_files_end):
+#     st.success("✅ Tous les fichiers présents dans `data/new_pdf/` ont été traités et sauvegardés.")
+#     st.page_link("pages/1_Attribute_users.py", label="➡️ Aller à l’attribution", icon="👤")
 
-else:
-    missing = [file for file in raw_files if file not in imported_files]
-    st.warning(f"⚠️ Il reste {len(missing)} fichier(s) à extraire : {', '.join(missing)}")
+# else:
+#     missing = [file for file in raw_files if file not in imported_files]
+#     st.warning(f"⚠️ Il reste {len(missing)} fichier(s) à extraire : {', '.join(missing)}")
 
 

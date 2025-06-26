@@ -4,7 +4,6 @@ print("🔍 Chargement du module data_loader")
 try:
     from pathlib import Path
     import pandas as pd
-    import streamlit as st
     import pdfplumber
     import re
     from datetime import datetime
@@ -14,10 +13,8 @@ except Exception as e:
 
 
 DATA_PATH = Path("data/processed/expenses_1.csv")
-DATA_PATH_PDF = Path("data/raw/2025_05_Monthly BarclayCard Statement.pdf")
+DATA_PATH_PDF = Path("data/new_pdf/2025_05_Monthly BarclayCard Statement.pdf")
 
-
-#@st.cache_data
 
 def load_data():
     return pd.read_csv(DATA_PATH, parse_dates=["date"])

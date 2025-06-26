@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv('data/raw/depenses_mars_avril_mai.csv', sep=';')
+df = pd.read_csv('data/new_pdf/depenses_mars_avril_mai.csv', sep=';')
 # Clean the Amount column
 df["amount"] = (
     df["Amount (£)"]

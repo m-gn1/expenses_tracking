@@ -6,6 +6,7 @@ import pandas as pd
 st.page_link("pages/0_Importer_fichiers.py", label="➡️ Aller à l’attribution", icon="👤")
 df_temp = st.session_state.get("df_to_process")
 st.dataframe(df_temp, use_container_width=True)
+st.warning("cette page n'est pas utile")
 
 def analyse():
     st.title("📊 Analyse")
