@@ -1,6 +1,15 @@
 import streamlit as st
 import pandas as pd
 from utils.import_files import list_pdf_files, list_files, display_file_processing_block, import_pdf_file, display_processed_summary, save_processed_files
+from utils.ui_helpers import clear_cache_on_page_change
+
+####### CLEAR CACHE ########
+# Identifier cette page par un nom unique
+CURRENT_PAGE = "0_Importer_fichiers.py"  # ex: "Importer", "Analyse", "Résultats"
+clear_cache_on_page_change(CURRENT_PAGE)
+
+###########################################
+
 
 NEW_PDF = "./data/new_pdf"
 IMPORTED_FOLDER = "./data/imported_data"

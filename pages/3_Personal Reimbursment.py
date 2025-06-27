@@ -1,24 +1,22 @@
 import streamlit as st
 import pandas as pd
+import os
 from utils.data_loader import load_data, filter_by_date
+
 
 
 # Define variables
 # --- Load data ---
-
+st.write("df pre enregistré pour back up")
 df = load_data()
-
 st.dataframe(df)
 
-if "full_df" in st.session_state:
-    df1 = st.session_state["full_df"]
+processed_path = "./data/processed"
+name_df = "expenses_data.csv"
 
-    st.subheader("Aperçu des données chargées :")
-    st.dataframe(df1)
-
-    # Tu peux maintenant faire tous tes filtres, visualisations, etc.
-else:
-    st.warning("Aucune donnée n'a encore été chargée. Va d'abord dans l'onglet 'Data'.")
+st.write("df qui remplacerea")
+df1 = pd.read_csv(os.path.join(processed_path, name_df))
+st.dataframe(df1)
 
 ### Title and description
 

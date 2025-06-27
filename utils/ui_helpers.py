@@ -59,9 +59,9 @@ def get_extraction_options(files):
 
 ### TO DO : key cardholder ne fonctionnne pas, verfiier le session. state #####
 
-def assign_missing_users(full_df_key="full_df", cardholders_key="cardholders"):
+def assign_missing_users(common_user, full_df_key="full_df", cardholders_key="cardholders"):
     full_df = st.session_state.get(full_df_key)
-    cardholders = ["Foyer"] + sorted(list(st.session_state.get(cardholders_key, [])))
+    cardholders = common_user + sorted(list(st.session_state.get(cardholders_key, [])))
 
     if full_df is None or full_df["user"].notna().all():
         return
@@ -198,6 +198,22 @@ def is_fee_adjusted_match(df, balance, fee=20):
         return False  # condition 3
 
 
+def clear_cache_on_page_change(current_page: str, preserve_keys=None):
+    """
+    Supprime les éléments de st.session_state si on change de page.
+    
+    :param current_page: Nom unique de la page actuelle (ex: "Import", "Analyse", etc.)
+    :param preserve_keys: Liste de clés à ne pas supprimer (ex: ["previous_page", "config"])
+    """
+    if preserve_keys is None:
+        preserve_keys = ["previous_page"]
 
+    previous_page = st.session_state.get("previous_page")
 
+    if previous_page and previous_page != current_page:
+        for key in list(st.session_state.keys()):
+            if key not in preserve_keys:
+                del st.session_state[key]
+
+    st.session_state["previous_page"] = current_page
 
