@@ -217,3 +217,70 @@ def clear_cache_on_page_change(current_page: str, preserve_keys=None):
 
     st.session_state["previous_page"] = current_page
 
+
+def display_user_amount_boxes (df, col_user, col_amount):
+    cols = st.columns(len(df))
+    for i, (_, row) in enumerate(df.iterrows()):
+        user = row[col_user]
+        amount = row[col_amount]
+
+        with cols[i]:
+            st.markdown(f"""
+            <br>
+            <div style="border: 1px solid #ccc; border-radius: 10px; padding: 1em; background-color: #323e54;">
+                <h4 style="margin-bottom: 0.5em;">👤 {user}</h4>
+                <p style="font-size: 1.1em;">💸 <strong>{amount:.2f} £</strong></p>
+            </div>
+            <br>
+            """, unsafe_allow_html=True)
+    return
+
+import streamlit as st
+
+def manage_categories():
+    # Initialisation si besoin
+    if "categories" not in st.session_state:
+        st.session_state["categories"] = [
+            "Food & Beverage", "Furniture", "Transport", "Shopping",
+            "Other", "Home & Bills", "Entertainment"
+        ]
+
+    st.markdown("### 📂 Gérer les catégories")
+
+    # 🔠 Ajout de catégorie
+    with st.form("add_category_form", clear_on_submit=True):
+        new_cat = st.text_input("➕ Ajouter une nouvelle catégorie", "")
+        submitted = st.form_submit_button("✅ Ajouter")
+        if submitted:
+            if new_cat:
+                if new_cat not in st.session_state["categories"]:
+                    st.session_state["categories"].append(new_cat)
+                    st.success(f"✅ '{new_cat}' a été ajouté.")
+                else:
+                    st.warning("⚠️ Cette catégorie existe déjà.")
+            else:
+                st.warning("⚠️ Entrez un nom valide.")
+
+    # 🧹 Suppression de catégorie
+    st.markdown("#### 📌 Liste des catégories")
+    cols = st.columns(4)
+
+    for i, cat in enumerate(st.session_state["categories"]):
+        col = cols[i % 4]
+        with col:
+            st.markdown(
+                f"""
+                <div style='background-color: #e0e0e0; color: black; padding: 6px 12px;
+                            margin: 4px 0; border-radius: 20px; font-size: 0.9em;
+                            display: flex; justify-content: space-between; align-items: center;'>
+                    <span>{cat}</span>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            if st.button(f"✖", key=f"remove_{cat}"):
+                st.session_state["categories"].remove(cat)
+                st.rerun()
+
+
+#❌

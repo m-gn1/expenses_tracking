@@ -74,7 +74,6 @@ assign_missing_users(FOYER, full_df_key="full_df", cardholders_key="cardholders"
 # Affichage si tout est rempli
 if st.session_state["full_df"]["user"].notna().all():
     st.success("✅ Toutes les lignes ont un utilisateur affecté.")
-    full_df['reimbursed'] = full_df['user'].str.contains(FOYER[0], case=False)
     st.session_state["full_df"] = full_df
     st.dataframe(st.session_state["full_df"], use_container_width=True)
 

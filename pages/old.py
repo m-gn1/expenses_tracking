@@ -1,27 +1,4 @@
-import streamlit as st
-import pandas as pd
-import os
-from utils.data_loader import load_data, filter_by_date
-
-
-
-# Define variables
-# --- Load data ---
-st.write("df pre enregistré pour back up")
-df = load_data()
-st.dataframe(df)
-
-processed_path = "./data/processed"
-name_df = "expenses_data.csv"
-
-st.write("df qui remplacerea")
-df1 = pd.read_csv(os.path.join(processed_path, name_df))
-st.dataframe(df1)
-
-### Title and description
-
-st.title("💸 Personal Reimbursement to the Common Pot")
-st.write("Select a date range to see how much each person needs to pay back to the shared pot (excluding shared expenses).")
+st.subheader("OLD")
 
 # --- Date range filter ---
 min_date = df["date"].min().date()
