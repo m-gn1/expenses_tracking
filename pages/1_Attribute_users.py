@@ -9,8 +9,8 @@ from utils.helpers import check_if_existing_processed_file, concat_dataframes
 # Identifier cette page par un nom unique
 CURRENT_PAGE = "1_Attribute_users.py"  # ex: "Importer", "Analyse", "Résultats"
 clear_cache_on_page_change(CURRENT_PAGE)
-
 ###########################################
+
 FOYER = ["Foyer"]
 NEW_PDF = "./data/new_pdf"
 PROCESSED_PDF = "./data/processed_pdf"

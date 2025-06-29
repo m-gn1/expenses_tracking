@@ -10,7 +10,6 @@ clear_cache_on_page_change(CURRENT_PAGE)
 
 ###########################################
 
-
 NEW_PDF = "./data/new_pdf"
 IMPORTED_FOLDER = "./data/imported_data"
 PROCESSED_PDF = "./data/processed_pdf"

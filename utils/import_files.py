@@ -149,6 +149,7 @@ def handle_extraction_button(file, path, has_user):
         df["date_source_file"] = df["source_file"].str[:7]
         df["reimbursed"] = None
         df["categories"] = None
+        df["predicted_category"] = None
         file_prefix = file[:7]
         df = df.reset_index(drop=True)
         df.insert(0, "transaction_ID", df.index.map(lambda i: f"{file_prefix}_{i+1}"))

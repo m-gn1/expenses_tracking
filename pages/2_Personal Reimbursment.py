@@ -13,6 +13,7 @@ clear_cache_on_page_change(CURRENT_PAGE)
 FOYER = 'Foyer'
 ### affichage
 
+
 ########################## WORKING SESSION #######################
 
 processed_path = "./data/processed"

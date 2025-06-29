@@ -87,7 +87,7 @@ def assign_missing_users(common_user, full_df_key="full_df", cardholders_key="ca
             row_key = f"user_{i}"
             default = st.session_state.user_selections.get(row_key, "Foyer")
             date_str = row["date"] if isinstance(row["date"], str) else row["date"].strftime("%Y-%m-%d")
-            label = f"{date_str} | {row['description']} | {row['amount']} €"
+            label = f"{date_str} | {row['description']} | {row['amount']} £"
 
             selected = st.selectbox(
                 label,
@@ -239,8 +239,8 @@ import streamlit as st
 
 def manage_categories():
     # Initialisation si besoin
-    if "categories" not in st.session_state:
-        st.session_state["categories"] = [
+    if "list_categories" not in st.session_state:
+        st.session_state["list_categories"] = [
             "Food & Beverage", "Furniture", "Transport", "Shopping",
             "Other", "Home & Bills", "Entertainment"
         ]
@@ -253,8 +253,8 @@ def manage_categories():
         submitted = st.form_submit_button("✅ Ajouter")
         if submitted:
             if new_cat:
-                if new_cat not in st.session_state["categories"]:
-                    st.session_state["categories"].append(new_cat)
+                if new_cat not in st.session_state["list_categories"]:
+                    st.session_state["list_categories"].append(new_cat)
                     st.success(f"✅ '{new_cat}' a été ajouté.")
                 else:
                     st.warning("⚠️ Cette catégorie existe déjà.")
@@ -265,7 +265,7 @@ def manage_categories():
     st.markdown("#### 📌 Liste des catégories")
     cols = st.columns(4)
 
-    for i, cat in enumerate(st.session_state["categories"]):
+    for i, cat in enumerate(st.session_state["list_categories"]):
         col = cols[i % 4]
         with col:
             st.markdown(
@@ -279,7 +279,7 @@ def manage_categories():
                 unsafe_allow_html=True
             )
             if st.button(f"✖", key=f"remove_{cat}"):
-                st.session_state["categories"].remove(cat)
+                st.session_state["list_categories"].remove(cat)
                 st.rerun()
 
 
