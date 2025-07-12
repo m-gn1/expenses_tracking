@@ -7,7 +7,7 @@ from utils.helpers import check_if_existing_processed_file, concat_dataframes
 
 ####### CLEAR CACHE ########
 # Identifier cette page par un nom unique
-CURRENT_PAGE = "1_Attribute_users.py"  # ex: "Importer", "Analyse", "Résultats"
+CURRENT_PAGE = "2_Attribute_users.py"  # ex: "Importer", "Analyse", "Résultats"
 clear_cache_on_page_change(CURRENT_PAGE)
 ###########################################
 
@@ -28,7 +28,7 @@ if all(file in processed_pdf for file in new_pdf):
 else:
     missing = [file for file in new_pdf if file not in processed_pdf]
     st.warning(f"⚠️ Il reste {len(missing)} fichier(s) à extraire : {', '.join(missing)}")
-    st.page_link("pages/0_Importer_fichiers.py", label="➡️ Aller à l’import")
+    st.page_link("pages/1_Importer_fichiers.py", label="➡️ Aller à l’import")
 
 ### Check if a file already exists
 nb_df = 0

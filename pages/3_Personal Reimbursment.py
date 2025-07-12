@@ -6,7 +6,7 @@ from utils.ui_helpers import display_user_amount_boxes, clear_cache_on_page_chan
 
 ####### CLEAR CACHE ########
 # Identifier cette page par un nom unique
-CURRENT_PAGE = "2_Personal Reimbursment.py"  # ex: "Importer", "Analyse", "Résultats"
+CURRENT_PAGE = "3_Personal Reimbursment.py"  # ex: "Importer", "Analyse", "Résultats"
 clear_cache_on_page_change(CURRENT_PAGE)
 ########################################################################################################
 

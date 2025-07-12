@@ -5,7 +5,7 @@ from utils.ui_helpers import clear_cache_on_page_change
 
 ####### CLEAR CACHE ########
 # Identifier cette page par un nom unique
-CURRENT_PAGE = "0_Importer_fichiers.py"  # ex: "Importer", "Analyse", "Résultats"
+CURRENT_PAGE = "1_Importer_fichiers.py"  # ex: "Importer", "Analyse", "Résultats"
 clear_cache_on_page_change(CURRENT_PAGE)
 
 ###########################################
@@ -35,7 +35,7 @@ if active_file:
 
 if all(file in processed_pdf for file in new_pdf):
     st.success("✅ Tous les fichiers présents dans `data/new_pdf/` ont été traités et sauvegardés, prêt pour l'attribution")
-    st.page_link("pages/1_Attribute_users.py", label="➡️ Aller à l’attribution", icon="👤")
+    st.page_link("pages/2_Attribute_users.py", label="➡️ Aller à l’attribution", icon="👤")
 else:
     missing = [file for file in new_pdf if file not in processed_pdf]
     st.warning(f"⚠️ Il reste {len(missing)} fichier(s) à extraire : {', '.join(missing)}")

@@ -5,7 +5,7 @@ from utils.import_files import list_processed_files, display_file_processing_blo
 from utils.ui_helpers import clear_cache_on_page_change,manage_categories
 from utils.models import classify_expenses_learning
 
-CURRENT_PAGE = "2_Personal Reimbursment.py"  # ex: "Importer", "Analyse", "Résultats"
+CURRENT_PAGE = "4_Update_categories.py"  # ex: "Importer", "Analyse", "Résultats"
 clear_cache_on_page_change(CURRENT_PAGE)
 ###########################################@
 
