@@ -3,6 +3,8 @@ import pandas as pd
 import os
 from utils.data_loader import load_data, filter_by_date
 from utils.ui_helpers import display_user_amount_boxes, clear_cache_on_page_change
+from config import processed_path, name_df
+
 
 ####### CLEAR CACHE ########
 # Identifier cette page par un nom unique
@@ -16,8 +18,6 @@ FOYER = 'Foyer'
 
 ########################## WORKING SESSION #######################
 
-processed_path = "./data/processed"
-name_df = "expenses_data.csv"
 total_path = os.path.join(processed_path, name_df)
 
 df = pd.read_csv(total_path)

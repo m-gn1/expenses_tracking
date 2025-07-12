@@ -4,6 +4,9 @@ import os
 from utils.import_files import list_files, list_processed_files, list_pdf_files
 from utils.ui_helpers import get_csv_files, assign_missing_users, clear_cache_on_page_change
 from utils.helpers import check_if_existing_processed_file, concat_dataframes
+from utils.nextcloud_tools import load_config
+
+from config import IMPORTED_FOLDER, PROCESSED_PDF, FOYER, processed_path, name_df
 
 ####### CLEAR CACHE ########
 # Identifier cette page par un nom unique
@@ -11,17 +14,14 @@ CURRENT_PAGE = "2_Attribute_users.py"  # ex: "Importer", "Analyse", "Résultats"
 clear_cache_on_page_change(CURRENT_PAGE)
 ###########################################
 
-FOYER = ["Foyer"]
-NEW_PDF = "./data/new_pdf"
-PROCESSED_PDF = "./data/processed_pdf"
-IMPORTED_FOLDER = "./data/imported_data"
-processed_path = "./data/processed"
-name_df = "expenses_data.csv"
+config = load_config()
+if config:
+    local_folder = config.get("local_folder")
 
 st.title("📄 Affectation manuelle des utilisateurs")
 all_dfs = []
 ## check si on a tout importé
-new_pdf, processed_pdf = list_pdf_files(NEW_PDF, PROCESSED_PDF)
+new_pdf, processed_pdf = list_pdf_files(local_folder, PROCESSED_PDF)
 if all(file in processed_pdf for file in new_pdf):
     st.success("✅ Tous les fichiers présents dans `data/new_pdf/` ont été traités et sauvegardés, prêt pour l'attribution")
     

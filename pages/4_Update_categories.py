@@ -4,18 +4,13 @@ import os
 from utils.import_files import list_processed_files, display_file_processing_block, import_pdf_file, display_processed_summary, save_processed_files
 from utils.ui_helpers import clear_cache_on_page_change,manage_categories
 from utils.models import classify_expenses_learning
+from config import processed_path, name_df
+
 
 CURRENT_PAGE = "4_Update_categories.py"  # ex: "Importer", "Analyse", "Résultats"
 clear_cache_on_page_change(CURRENT_PAGE)
 ###########################################@
 
-
-
-IMPORTED_FOLDER = "./data/imported_data"
-CATEFORISED_FOLDER = "./data/categorised_data"
-
-processed_path = "./data/processed"
-name_df = "expenses_data.csv"
 total_path = os.path.join(processed_path, name_df)
 
 df = pd.read_csv(total_path)

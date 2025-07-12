@@ -4,18 +4,13 @@ import numpy as np
 import os
 import altair as alt
 from utils.data_loader import load_data, filter_dataframe_categoriel, add_month
+from config import processed_path, name_df
 
 
 # Load the cleaned data
 
-processed_path = "./data/processed"
-name_df = "expenses_data.csv"
 total_path = os.path.join(processed_path, name_df)
-
 df = pd.read_csv(total_path)
-# df = load_data()
-# df = add_month(df, "date")
-
 
 
 st.title("Voici nos depenses")

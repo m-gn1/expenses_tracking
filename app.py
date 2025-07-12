@@ -10,6 +10,11 @@ Voici les 5 étapes à suivre dans l'ordre :
 
 pages_info = [
     {
+        "title": "0_Synchronisation_NextCloud",
+        "description": "Synchronise les fichiers depuis NextCloud.",
+        "page": "pages/0_Synchronisation_NextCloud.py"
+    },
+    {
         "title": "1. Importer les fichiers",
         "description": "Charge les fichiers PDF de dépenses et les transforme en tableaux exploitables.",
         "page": "pages/1_Importer_fichiers.py"
