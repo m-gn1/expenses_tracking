@@ -31,14 +31,23 @@ def connect_to_nextcloud():
     return st.session_state.get("client", None)
 
 
-def choose_remote_folder():
-    with st.expander("📂 Dossier distant Nextcloud", expanded=True):
-        default_folder = st.session_state.get("remote_folder", "/")
-        remote_folder = st.text_input("Chemin du dossier distant", value=default_folder)
-        if st.button("✅ Valider le dossier distant"):
-            st.session_state.remote_folder = remote_folder
-            st.success("✅ Dossier distant sélectionné.")
-    return st.session_state.get("remote_folder")
+def choose_remote_source_folder():
+    with st.expander("📂 Dossier source Nextcloud", expanded=True):
+        default_folder = st.session_state.get("remote_source_folder", "/")
+        remote_source_folder = st.text_input("Chemin du dossier source", value=default_folder)
+        if st.button("✅ Valider le dossier source"):
+            st.session_state.remote_source_folder = remote_source_folder
+            st.success("✅ Dossier source sélectionné.")
+    return st.session_state.get("remote_source_folder")
+
+def choose_remote_working_folder():
+    with st.expander("📂 Dossier de travail Nextcloud", expanded=True):
+        default_folder = st.session_state.get("remote_working_folder", "/")
+        remote_working_folder = st.text_input("Chemin du dossier de travail", value=default_folder)
+        if st.button("✅ Valider le dossier de travail"):
+            st.session_state.remote_working_folder = remote_working_folder
+            st.success("✅ Dossier de travail sélectionné.")
+    return st.session_state.get("remote_working_folder")
 
 
 def choose_local_folder():
@@ -109,3 +118,29 @@ def verify_config_and_sync(client):
             download_missing_files(client, nc_folder, local_folder)
             return nc_folder, local_folder
     return None, None
+
+
+
+def ensure_remote_folder_exists(client: Client, remote_path: str) -> bool:
+    """
+    Vérifie si un dossier distant Nextcloud existe, et le crée si besoin.
+
+    Parameters:
+    - client (Client): instance connectée de WebDAV.
+    - remote_path (str): chemin distant (ex: "/Marie/fichiers").
+
+    Returns:
+    - bool: True si le dossier existe ou a été créé avec succès, False sinon.
+    """
+    try:
+        if client.check(remote_path):
+            st.info(f"📂 Le dossier distant existe déjà : {remote_path}")
+            return True
+        else:
+            client.mkdir(remote_path)
+            st.success(f"📁 Dossier distant créé : {remote_path}")
+            return True
+    except Exception as e:
+        st.error(f"❌ Erreur lors de la vérification ou de la création du dossier distant : {e}")
+        return False
+

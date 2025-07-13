@@ -12,7 +12,7 @@ if client:
 
     # Étape 2 : si pas de config → choix manuels
     if not (nc_folder and local_folder):
-        nc_folder = nc.choose_remote_folder()
+        nc_folder = nc.choose_remote_source_folder()
         local_folder = nc.choose_local_folder()
 
         if nc_folder and local_folder:

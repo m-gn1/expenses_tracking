@@ -9,7 +9,9 @@ from config import IMPORTED_FOLDER, PROCESSED_PDF
 ####### CLEAR CACHE ########
 # Identifier cette page par un nom unique
 CURRENT_PAGE = "1_Importer_fichiers.py"  # ex: "Importer", "Analyse", "Résultats"
-clear_cache_on_page_change(CURRENT_PAGE)
+clear_cache_on_page_change(CURRENT_PAGE, preserve_keys="source_folder")
+
+st.write(st.session_state.get("source_folder"))
 
 ###########################################
 
