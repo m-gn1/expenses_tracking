@@ -57,7 +57,7 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
  ####################################################################           
             CACHE_FOLDER = ".cache/data/new_pdf"
 
-            st.markdown(f"### 📂 Contenu du dossier {CACHE_FOLDER})
+            st.markdown(f"### 📂 Contenu du dossier {CACHE_FOLDER}")
 
             if os.path.exists(CACHE_FOLDER):
                 files = os.listdir(CACHE_FOLDER)
