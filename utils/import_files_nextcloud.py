@@ -51,8 +51,6 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
 
         with st.expander("🔧 Traiter ce fichier", expanded=True):
             download_pdf(client, remote_folder, file, local_subfolder)
-            path = os.path.join("./cache",local_subfolder)
-            path_file = os.path.join(path, file)
             st.write("GROS DEBUG")
  ####################################################################           
             CACHE_FOLDER = ".cache/data/new_pdf"
@@ -70,7 +68,11 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
                 st.error("❌ Le dossier `.cache/` n'existe pas.")
 
 ####################################################################
-            pdf_display(path)
+            path = os.path.join("./cache",local_subfolder)
+            path_file = os.path.join(CACHE_FOLDER, file)
+            st.write(f"local subfolder, {local_subfolder}")
+            st.write(f"path_file, {path_file}")
+            pdf_display(path_file)
 
             # has_user = st.checkbox("Contient la section 'Cardholders and their references' ?", key=f"user_col_{file}")
 
