@@ -55,9 +55,9 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
             path_file = os.path.join(path, file)
             st.write("GROS DEBUG")
  ####################################################################           
-            CACHE_FOLDER = ".cache/data"
+            CACHE_FOLDER = ".cache/data/new_pdf"
 
-            st.markdown("### 📂 Contenu du dossier `.cache/`")
+            st.markdown(f"### 📂 Contenu du dossier {CACHE_FOLDER})
 
             if os.path.exists(CACHE_FOLDER):
                 files = os.listdir(CACHE_FOLDER)
