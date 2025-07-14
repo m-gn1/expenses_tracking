@@ -49,6 +49,7 @@ processed_folder_pdf = working_folder+"/"+REMOTE_PROCESSED_PDF
 imported_folder_pdf = working_folder+"/"+REMOTE_IMPORTED_FOLDER
 
 new_pdf, processed_pdf = list_remote_pdf_files(client, source_folder, processed_folder_pdf)
+st.write("debug")
 st.write(new_pdf)
 st.write(processed_pdf)
 
@@ -62,6 +63,12 @@ if not raw_files:
 for file in new_pdf:
     st.session_state.setdefault(f"extracted_{file}", False)
     is_done = file in processed_pdf
+    st.write("debug")
+    st.write(file)
+    st.write(is_done)
+    st.write(processed_pdf)
+    st.write(LOCAL_NEW_PDF)
+    st.write(source_folder)
     display_file_processing_block(client, source_folder, LOCAL_NEW_PDF, file, is_done)
 
 #Une fois tous les blocs affichés
