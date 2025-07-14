@@ -49,6 +49,8 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
     with st.expander("🔧 Traiter ce fichier", expanded=True):
         download_pdf(client, remote_folder, file, local_subfolder)
         path = os.path.join(local_subfolder, file)
+        st.write("debug")
+        st.write(path)
         pdf_display(path)
 
         has_user = st.checkbox("Contient la section 'Cardholders and their references' ?", key=f"user_col_{file}")
