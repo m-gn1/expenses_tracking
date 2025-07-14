@@ -55,7 +55,7 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
             st.write("debug")
             st.write(path)
             st.write("lister fichier dans dossier")
-            list_files_in_folder(path)
+            list_files_in_folder(local_subfolder)
             st.write("fin liste")
             # pdf_display(path)
 
