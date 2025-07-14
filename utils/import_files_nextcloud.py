@@ -46,65 +46,47 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
         st.success("✅ Déjà traité")
         return
     
-    else:
-        st.subheader(f"🗂 {file}")
+    st.subheader(f"🗂 {file}")
 
-        with st.expander("🔧 Traiter ce fichier", expanded=True):
-            download_pdf(client, remote_folder, file, local_subfolder)
-            st.write("GROS DEBUG")
- ####################################################################           
-            CACHE_FOLDER = ".cache/data/new_pdf"
+    with st.expander("🔧 Traiter ce fichier", expanded=True):
+        download_pdf(client, remote_folder, file, local_subfolder)
+        path = os.path.join(".cache",local_subfolder)
+        path_file = os.path.join(path, file)
+        pdf_display(path_file)
 
-            st.markdown(f"### 📂 Contenu du dossier {CACHE_FOLDER}")
+        has_user = st.checkbox("Contient la section 'Cardholders and their references' ?", key=f"user_col_{file}")
 
-            if os.path.exists(CACHE_FOLDER):
-                files = os.listdir(CACHE_FOLDER)
-                if files:
-                    for file in files:
-                        st.write(f"- {file}")
-                else:
-                    st.info("📭 Le dossier `.cache/` est vide.")
-            else:
-                st.error("❌ Le dossier `.cache/` n'existe pas.")
+        handle_extraction_button(file, path, has_user)
 
-####################################################################
-            path = os.path.join(".cache",local_subfolder)
-            path_file = os.path.join(path, file)
-            pdf_display(path_file)
+                # Suite logique après extraction
+        if not st.session_state.get(f"extracted_{file}", False):
+            return
 
-            has_user = st.checkbox("Contient la section 'Cardholders and their references' ?", key=f"user_col_{file}")
+        df = st.session_state[f"df_{file}"]
+        balance = st.session_state[f"balance_{file}"]
+        due_date = st.session_state[f"due_{file}"]
 
-            handle_extraction_button(file, path, has_user)
+        quick_checks(df, balance, due_date)
 
-                    # Suite logique après extraction
-            if not st.session_state.get(f"extracted_{file}", False):
-                return
+        handle_fee_adjustment_button(file)
 
-            df = st.session_state[f"df_{file}"]
-            balance = st.session_state[f"balance_{file}"]
-            due_date = st.session_state[f"due_{file}"]
+        df = st.session_state[f"df_{file}"]
 
-            quick_checks(df, balance, due_date)
-
-            handle_fee_adjustment_button(file)
-
+        if st.session_state.get(f"show_df_{file}", False):
             df = st.session_state[f"df_{file}"]
 
-            if st.session_state.get(f"show_df_{file}", False):
-                df = st.session_state[f"df_{file}"]
+            # ✅ Affiche le message de succès si présent
+            if st.session_state.get(f"fee_adjusted_success_{file}", False):
+                st.success("✅ Les frais ajustés ont été ajoutés.")
+                del st.session_state[f"fee_adjusted_success_{file}"]
 
-                # ✅ Affiche le message de succès si présent
-                if st.session_state.get(f"fee_adjusted_success_{file}", False):
-                    st.success("✅ Les frais ajustés ont été ajoutés.")
-                    del st.session_state[f"fee_adjusted_success_{file}"]
-
-                st.caption("📊 Données extraites :")
-                st.dataframe(df, use_container_width=True)
-                st.session_state["df_to_process"] = df
-
-
+            st.caption("📊 Données extraites :")
+            st.dataframe(df, use_container_width=True)
             st.session_state["df_to_process"] = df
-            st.session_state["active_file"] = file
+
+
+        st.session_state["df_to_process"] = df
+        st.session_state["active_file"] = file
 
 
 
