@@ -6,8 +6,19 @@ from utils.new_nextcloud_tools import (
     load_config,
     list_remote_pdf_files)
 from utils.import_files_nextcloud import display_file_processing_block, import_pdf_file
-from config import IMPORTED_FOLDER, PROCESSED_PDF
-from config import REMOTE_IMPORTED_FOLDER, REMOTE_PROCESSED_PDF, REMOTE_PROCESSED_PATH, LOCAL_NEW_PDF
+# from config import IMPORTED_FOLDER, PROCESSED_PDF
+# from config import REMOTE_IMPORTED_FOLDER, REMOTE_PROCESSED_PDF, REMOTE_PROCESSED_PATH, LOCAL_NEW_PDF
+
+## config
+
+REMOTE_IMPORTED_FOLDER = "data/imported_data/"
+REMOTE_PROCESSED_PDF = "data/processed_pdf/"
+REMOTE_PROCESSED_PATH = "data/processed/"
+LOCAL_NEW_PDF = "data/new_pdf/"
+REMOTE_FOLDERS = [REMOTE_IMPORTED_FOLDER, REMOTE_PROCESSED_PDF, REMOTE_PROCESSED_PATH]
+LOCAL_FOLDERS = REMOTE_FOLDERS + [LOCAL_NEW_PDF]
+
+## end config
 
 ##### INIT #######
 st.session_state.setdefault("connect_validated", None)

@@ -12,9 +12,19 @@ from utils.new_nextcloud_tools import (
     save_config,
     create_nested_subfolders_in_nextcloud,
     create_local_subfolders)
-from config import REMOTE_IMPORTED_FOLDER, REMOTE_PROCESSED_PDF, REMOTE_PROCESSED_PATH, LOCAL_NEW_PDF
+#from config import REMOTE_IMPORTED_FOLDER, REMOTE_PROCESSED_PDF, REMOTE_PROCESSED_PATH, LOCAL_NEW_PDF
+
+
+## config
+
+REMOTE_IMPORTED_FOLDER = "data/imported_data/"
+REMOTE_PROCESSED_PDF = "data/processed_pdf/"
+REMOTE_PROCESSED_PATH = "data/processed/"
+LOCAL_NEW_PDF = "data/new_pdf/"
 REMOTE_FOLDERS = [REMOTE_IMPORTED_FOLDER, REMOTE_PROCESSED_PDF, REMOTE_PROCESSED_PATH]
 LOCAL_FOLDERS = REMOTE_FOLDERS + [LOCAL_NEW_PDF]
+
+## end config
 
 st.title("☁️ Synchronisation Nextcloud")
 
