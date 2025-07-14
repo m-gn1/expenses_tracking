@@ -55,11 +55,6 @@ def import_pdf_file(IMPORTED_FOLDER, NEW_PDF, PROCESSED_PDF,file):
             del st.session_state["df_to_process"]
             del st.session_state["active_file"]
             st.rerun()
-        # else:
-        #     st.warning("Veuillez affecter les utilisateurs manquants avant de sauvegarder.")
-        #     #st.dataframe(df_temp, use_container_width=True)
-        #     st.page_link("pages/9999_TEST.py", label="➡️ Aller à l’attribution", icon="👤")
-        #     st.rerun()
 
 
 def display_processed_summary(IMPORTED_FOLDER):

@@ -15,7 +15,7 @@ client = nc.connect_to_nextcloud()
 #### Verfiier si fichier de conf existe. 
 if client:
     # Étape 1 : vérifier la config
-    source_folder, working_folder = verify_config(client)
+    source_folder, working_folder = None, None
 
     # Étape 2 : si pas de config → choix manuels
     if not (source_folder and working_folder):
@@ -29,7 +29,7 @@ if client:
         st.session_state["working_folder"] = working_folder
         st.write(st.session_state["source_folder"])
         st.write(st.session_state["working_folder"])
-        save_config(source_folder, working_folder)
+        #save_config(source_folder, working_folder)
 
 # #### Verifier quels dossiers existent / je veux creer
 # if client:
