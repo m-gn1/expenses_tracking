@@ -37,6 +37,10 @@ client = connect_to_nextcloud()
 if client:
     # Étape 1 : vérifier la config
     source_folder, working_folder = verify_config(client) ### j'ens suis là
+    st.write("La config existe")
+    st.write(source_folder)
+    st.write(working_folder)
+    create_local_subfolders(".cache", LOCAL_FOLDERS)
 
     # Étape 2 : si pas de config → choix manuels
     if not (source_folder and working_folder):
@@ -48,11 +52,11 @@ if client:
         working_folder = choose_remote_working_folder()
         st.session_state["source_folder"] = source_folder
         st.session_state["working_folder"] = working_folder
+        create_nested_subfolders_in_nextcloud(client, working_folder, REMOTE_FOLDERS)
+        create_local_subfolders(".cache", LOCAL_FOLDERS)
         save_config(source_folder, working_folder)
         st.write(st.session_state["source_folder"])
         st.write(st.session_state["working_folder"])
-        create_nested_subfolders_in_nextcloud(client, working_folder, REMOTE_FOLDERS)
-        create_local_subfolders(".cache", LOCAL_FOLDERS)
 
         ###### TO DO : voir si je crée ici l'arborescence du dossier de travail #######
         #### TO DO : après avoir utilise downloard missing files, 
