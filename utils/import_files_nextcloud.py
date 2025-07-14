@@ -70,7 +70,7 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
                 st.error("❌ Le dossier `.cache/` n'existe pas.")
 
 ####################################################################
-            # pdf_display(path)
+            pdf_display(path)
 
             # has_user = st.checkbox("Contient la section 'Cardholders and their references' ?", key=f"user_col_{file}")
 
