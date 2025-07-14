@@ -52,8 +52,9 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
         with st.expander("🔧 Traiter ce fichier", expanded=True):
             download_pdf(client, remote_folder, file, local_subfolder)
             path = os.path.join(local_subfolder, file)
-            st.write("debug")
+            st.write("GROS DEBUG")
             st.write(path)
+            st.write(local_subfolder)
             st.write("lister fichier dans dossier")
             list_files_in_folder(local_subfolder)
             st.write("fin liste")

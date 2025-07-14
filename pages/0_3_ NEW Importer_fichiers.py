@@ -49,38 +49,42 @@ processed_folder_pdf = working_folder+"/"+REMOTE_PROCESSED_PDF
 imported_folder_pdf = working_folder+"/"+REMOTE_IMPORTED_FOLDER
 
 new_pdf, processed_pdf = list_remote_pdf_files(client, source_folder, processed_folder_pdf)
-st.write("debug")
+
+st.title("DEBUG")
 st.write(new_pdf)
 st.write(processed_pdf)
 
-st.title("📦 Monthly Ingestion of pdf files")
-
-raw_files, imported_files = list_remote_pdf_files(client, source_folder, imported_folder_pdf)
-if not raw_files:
-    st.warning(f"Aucun fichier PDF trouvé dans {source_folder}")
-    st.stop()
-
 for file in new_pdf:
-    st.session_state.setdefault(f"extracted_{file}", False)
-    is_done = file in processed_pdf
-    st.write("debug")
     st.write(file)
-    st.write(is_done)
-    st.write(processed_pdf)
-    st.write(LOCAL_NEW_PDF)
-    st.write(source_folder)
-    display_file_processing_block(client, source_folder, LOCAL_NEW_PDF, file, is_done)
 
-#Une fois tous les blocs affichés
-active_file = st.session_state.get("active_file")
-if active_file:
-    import_pdf_file(client, source_folder, working_folder, REMOTE_IMPORTED_FOLDER, LOCAL_NEW_PDF, REMOTE_PROCESSED_PDF,active_file)
+# st.title("📦 Monthly Ingestion of pdf files")
 
-if all(file in processed_pdf for file in new_pdf):
-    st.success("✅ Tous les fichiers présents dans `data/new_pdf/` ont été traités et sauvegardés, prêt pour l'attribution")
-    st.page_link("pages/2_Attribute_users.py", label="➡️ Aller à l’attribution", icon="👤")
-else:
-    missing = [file for file in new_pdf if file not in processed_pdf]
-    st.warning(f"⚠️ Il reste {len(missing)} fichier(s) à extraire : {', '.join(missing)}")
+# raw_files, imported_files = list_remote_pdf_files(client, source_folder, imported_folder_pdf)
+# if not raw_files:
+#     st.warning(f"Aucun fichier PDF trouvé dans {source_folder}")
+#     st.stop()
+
+# for file in new_pdf:
+#     st.session_state.setdefault(f"extracted_{file}", False)
+#     is_done = file in processed_pdf
+#     st.write("debug")
+#     st.write(file)
+#     st.write(is_done)
+#     st.write(processed_pdf)
+#     st.write(LOCAL_NEW_PDF)
+#     st.write(source_folder)
+#     display_file_processing_block(client, source_folder, LOCAL_NEW_PDF, file, is_done)
+
+# #Une fois tous les blocs affichés
+# active_file = st.session_state.get("active_file")
+# if active_file:
+#     import_pdf_file(client, source_folder, working_folder, REMOTE_IMPORTED_FOLDER, LOCAL_NEW_PDF, REMOTE_PROCESSED_PDF,active_file)
+
+# if all(file in processed_pdf for file in new_pdf):
+#     st.success("✅ Tous les fichiers présents dans `data/new_pdf/` ont été traités et sauvegardés, prêt pour l'attribution")
+#     st.page_link("pages/2_Attribute_users.py", label="➡️ Aller à l’attribution", icon="👤")
+# else:
+#     missing = [file for file in new_pdf if file not in processed_pdf]
+#     st.warning(f"⚠️ Il reste {len(missing)} fichier(s) à extraire : {', '.join(missing)}")
 
 
