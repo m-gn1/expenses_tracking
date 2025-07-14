@@ -49,6 +49,8 @@ processed_folder_pdf = working_folder+"/"+REMOTE_PROCESSED_PDF
 imported_folder_pdf = working_folder+"/"+REMOTE_IMPORTED_FOLDER
 
 new_pdf, processed_pdf = list_remote_pdf_files(client, source_folder, processed_folder_pdf)
+st.write(new_pdf)
+st.write(processed_pdf)
 
 st.title("📦 Monthly Ingestion of pdf files")
 
@@ -61,10 +63,6 @@ for file in new_pdf:
     st.session_state.setdefault(f"extracted_{file}", False)
     is_done = file in processed_pdf
     display_file_processing_block(client, source_folder, LOCAL_NEW_PDF, file, is_done)
-
-## j'ens suis la ##
-# import pdf file enregistre le csv dans imported, et deplace le pdf de new a processed
-# pour moi, je veux faire la même chose, dans cache et dans next cloud
 
 #Une fois tous les blocs affichés
 active_file = st.session_state.get("active_file")
