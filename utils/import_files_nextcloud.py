@@ -44,48 +44,49 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
         st.success("✅ Déjà traité")
         return
     
-    st.subheader(f"🗂 {file}")
+    else:
+        st.subheader(f"🗂 {file}")
 
-    with st.expander("🔧 Traiter ce fichier", expanded=True):
-        download_pdf(client, remote_folder, file, local_subfolder)
-        path = os.path.join(local_subfolder, file)
-        st.write("debug")
-        st.write(path)
-        pdf_display(path)
+        with st.expander("🔧 Traiter ce fichier", expanded=True):
+            download_pdf(client, remote_folder, file, local_subfolder)
+            path = os.path.join(local_subfolder, file)
+            st.write("debug")
+            st.write(path)
+            pdf_display(path)
 
-        has_user = st.checkbox("Contient la section 'Cardholders and their references' ?", key=f"user_col_{file}")
+            has_user = st.checkbox("Contient la section 'Cardholders and their references' ?", key=f"user_col_{file}")
 
-        handle_extraction_button(file, path, has_user)
+            handle_extraction_button(file, path, has_user)
 
-                # Suite logique après extraction
-        if not st.session_state.get(f"extracted_{file}", False):
-            return
+                    # Suite logique après extraction
+            if not st.session_state.get(f"extracted_{file}", False):
+                return
 
-        df = st.session_state[f"df_{file}"]
-        balance = st.session_state[f"balance_{file}"]
-        due_date = st.session_state[f"due_{file}"]
+            df = st.session_state[f"df_{file}"]
+            balance = st.session_state[f"balance_{file}"]
+            due_date = st.session_state[f"due_{file}"]
 
-        quick_checks(df, balance, due_date)
+            quick_checks(df, balance, due_date)
 
-        handle_fee_adjustment_button(file)
+            handle_fee_adjustment_button(file)
 
-        df = st.session_state[f"df_{file}"]
-
-        if st.session_state.get(f"show_df_{file}", False):
             df = st.session_state[f"df_{file}"]
 
-            # ✅ Affiche le message de succès si présent
-            if st.session_state.get(f"fee_adjusted_success_{file}", False):
-                st.success("✅ Les frais ajustés ont été ajoutés.")
-                del st.session_state[f"fee_adjusted_success_{file}"]
+            if st.session_state.get(f"show_df_{file}", False):
+                df = st.session_state[f"df_{file}"]
 
-            st.caption("📊 Données extraites :")
-            st.dataframe(df, use_container_width=True)
+                # ✅ Affiche le message de succès si présent
+                if st.session_state.get(f"fee_adjusted_success_{file}", False):
+                    st.success("✅ Les frais ajustés ont été ajoutés.")
+                    del st.session_state[f"fee_adjusted_success_{file}"]
+
+                st.caption("📊 Données extraites :")
+                st.dataframe(df, use_container_width=True)
+                st.session_state["df_to_process"] = df
+
+
             st.session_state["df_to_process"] = df
-
-
-        st.session_state["df_to_process"] = df
-        st.session_state["active_file"] = file
+            st.session_state["active_file"] = file
 
 
 ### logique de la fonction 
