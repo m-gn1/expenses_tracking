@@ -15,7 +15,7 @@ from utils.import_files import (
 
 from utils.new_nextcloud_tools import copy_file_nextcloud, save_df_to_nextcloud_csv
 
-from utils.debug import list_files_in_folder
+from utils.import_files import list_pdf_files
 
 def download_pdf(client, remote_folder, file_name, local_subfolder):
     """
@@ -56,7 +56,8 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
             st.write(path)
             st.write(local_subfolder)
             st.write("lister fichier dans dossier")
-            list_files_in_folder(local_subfolder)
+            test1, test2 = list_pdf_files(local_subfolder, local_subfolder)
+            st.write(test1)
             st.write("fin liste")
             # pdf_display(path)
 
