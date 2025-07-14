@@ -57,9 +57,6 @@ st.title("DEBUG")
 st.write(new_pdf)
 st.write(processed_pdf)
 
-for file in new_pdf:
-    st.write(file)
-
 st.title("📦 Monthly Ingestion of pdf files")
 
 for file in new_pdf:
