@@ -55,7 +55,7 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
             path_file = os.path.join(path, file)
             st.write("GROS DEBUG")
  ####################################################################           
-            CACHE_FOLDER = ".cache"
+            CACHE_FOLDER = ".cache/data"
 
             st.markdown("### 📂 Contenu du dossier `.cache/`")
 
