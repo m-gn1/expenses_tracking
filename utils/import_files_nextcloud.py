@@ -54,12 +54,22 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
             path = os.path.join("./cache",local_subfolder)
             path_file = os.path.join(path, file)
             st.write("GROS DEBUG")
-            st.write(path_file)
-            st.write(path)
-            st.write("lister fichier dans dossier")
-            test1, test2 = list_pdf_files(path, path)
-            st.write(test1)
-            st.write("fin liste")
+ ####################################################################           
+            CACHE_FOLDER = ".cache"
+
+            st.markdown("### 📂 Contenu du dossier `.cache/`")
+
+            if os.path.exists(CACHE_FOLDER):
+                files = os.listdir(CACHE_FOLDER)
+                if files:
+                    for file in files:
+                        st.write(f"- {file}")
+                else:
+                    st.info("📭 Le dossier `.cache/` est vide.")
+            else:
+                st.error("❌ Le dossier `.cache/` n'existe pas.")
+
+####################################################################
             # pdf_display(path)
 
             # has_user = st.checkbox("Contient la section 'Cardholders and their references' ?", key=f"user_col_{file}")
