@@ -71,6 +71,7 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
             path = os.path.join("./cache",local_subfolder)
             path_file = os.path.join(CACHE_FOLDER, file)
             st.write(f"local subfolder, {local_subfolder}")
+            st.write(f"path, {path}")
             st.write(f"path_file, {path_file}")
             pdf_display(path_file)
 
