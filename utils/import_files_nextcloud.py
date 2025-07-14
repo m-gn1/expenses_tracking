@@ -15,6 +15,8 @@ from utils.import_files import (
 
 from utils.new_nextcloud_tools import copy_file_nextcloud, save_df_to_nextcloud_csv
 
+from utils.debug import list_files_in_folder
+
 def download_pdf(client, remote_folder, file_name, local_subfolder):
     """
     Télécharge un PDF depuis Nextcloud dans le dossier .cache/IMPORTED_FOLDER et l'affiche.
@@ -52,6 +54,8 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
             path = os.path.join(local_subfolder, file)
             st.write("debug")
             st.write(path)
+            st.write("lister fichier dans dossier")
+            list_files_in_folder(path)
             pdf_display(path)
 
             has_user = st.checkbox("Contient la section 'Cardholders and their references' ?", key=f"user_col_{file}")
