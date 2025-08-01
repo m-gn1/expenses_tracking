@@ -21,8 +21,9 @@ REMOTE_IMPORTED_FOLDER = "data/imported_data/"
 REMOTE_PROCESSED_PDF = "data/processed_pdf/"
 REMOTE_PROCESSED_PATH = "data/processed/"
 LOCAL_NEW_PDF = "data/new_pdf/"
+LOCAL_ALL_PDF = "data/all_pdf/"
 REMOTE_FOLDERS = [REMOTE_IMPORTED_FOLDER, REMOTE_PROCESSED_PDF, REMOTE_PROCESSED_PATH]
-LOCAL_FOLDERS = REMOTE_FOLDERS + [LOCAL_NEW_PDF]
+LOCAL_FOLDERS = REMOTE_FOLDERS + [LOCAL_NEW_PDF, LOCAL_ALL_PDF]
 
 ## end config
 
@@ -48,8 +49,8 @@ if client:
         if st.button("📂 Vérifier/créer le dossier distant"):
             ensure_remote_folder_exists(st.session_state["client"], remote_path)
 
-        source_folder = choose_remote_source_folder(defaut="/Londres_shared/Credit Card Statements")
-        working_folder = choose_remote_working_folder()
+        source_folder = choose_remote_source_folder(defaut="/Londres_shared/Bank/Credit Card Statements")
+        working_folder = choose_remote_working_folder(defaut="/Londres_shared/Bank/app_working_directory")
         st.session_state["source_folder"] = source_folder
         st.session_state["working_folder"] = working_folder
         create_nested_subfolders_in_nextcloud(client, working_folder, REMOTE_FOLDERS)
