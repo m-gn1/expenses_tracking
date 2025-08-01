@@ -44,23 +44,18 @@ def list_and_select_pdf_local():
 
 import base64
 
+import streamlit.components.v1 as components
+
 def pdf_display_local(pdf_path):
-    if not os.path.exists(pdf_path):
-        st.error("❌ Le fichier PDF n'existe pas localement.")
-        return
-
     with open(pdf_path, "rb") as f:
-        base64_pdf = base64.b64encode(f.read()).decode("utf-8")
+        base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+    components.iframe(
+        src=f"data:application/pdf;base64,{base64_pdf}",
+        width=700,
+        height=800,
+        scrolling=True
+    )
 
-    pdf_view = f"""
-    <iframe
-        src="data:application/pdf;base64,{base64_pdf}"
-        width="100%"
-        height="600px"
-        style="border: none;"
-    ></iframe>
-    """
-    st.markdown(pdf_view, unsafe_allow_html=True)
 
 
 # ────────────── 🚀 APP STREAMLIT ──────────────
