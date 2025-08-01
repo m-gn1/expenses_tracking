@@ -195,7 +195,7 @@ def choose_remote_source_folder(defaut):
 def choose_remote_working_folder(defaut):
     with st.expander("📂 Dossier de travail Nextcloud", expanded=True):
         #default_folder = st.session_state.get("working_folder", "/")
-        working_folder = st.text_input("Chemin du dossier de travail", value=default)
+        working_folder = st.text_input("Chemin du dossier de travail", value=defaut)
         if st.button("✅ Valider le dossier de travail"):
             st.session_state.working_folder = working_folder
             st.success("✅ Dossier de travail sélectionné.")
