@@ -113,7 +113,7 @@ def import_pdf_file(client, source_folder, working_folder, IMPORTED_FOLDER, NEW_
             shutil.copy(source_cache, destination)
             st.success(f"Fichier bougé dans {destination}")
             # move le file de new à processed dans remote
-            copy_file_nextcloud(client, source_folder, os.path.join(working_folder, PROCESSED_PDF), file)
+            copy_file_nextcloud(client, source_folder, os.path.join(".cache/",working_folder, PROCESSED_PDF), file)
                 
             del st.session_state["df_to_process"]
             del st.session_state["active_file"]
