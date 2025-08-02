@@ -109,7 +109,7 @@ def import_pdf_file(client, source_folder, working_folder, IMPORTED_FOLDER, NEW_
             save_df_to_nextcloud_csv(client, df_temp, os.path.join(working_folder, IMPORTED_FOLDER), file.replace(".pdf", ".csv"))
             # move le file de new à processed dans cache
             source_cache = os.path.join(".cache/",NEW_PDF, file)
-            destination = os.path.join(PROCESSED_PDF, file)
+            destination = os.path.join(".cache/",PROCESSED_PDF, file)
             shutil.copy(source_cache, destination)
             st.success(f"Fichier bougé dans {destination}")
             # move le file de new à processed dans remote
