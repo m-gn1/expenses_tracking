@@ -57,6 +57,8 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
         has_user = st.checkbox("Contient la section 'Cardholders and their references' ?", key=f"user_col_{file}")
 
         handle_extraction_button(file, path, has_user)
+        print("handle_extraction_button", file, path, has_user)
+
 
                 # Suite logique après extraction
         if not st.session_state.get(f"extracted_{file}", False):
