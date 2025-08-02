@@ -49,9 +49,7 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
     st.subheader(f"🗂 {file}")
 
     with st.expander("🔧 Traiter ce fichier", expanded=True):
-        print("Téléchargement du PDF en cours...")
         download_pdf(client, remote_folder, file, local_subfolder)
-        print("Téléchargement du PDF terminé")
         path = os.path.join(".cache",local_subfolder)
         path_file = os.path.join(path, file)
         pdf_display(path_file)

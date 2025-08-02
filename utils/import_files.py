@@ -139,7 +139,9 @@ def display_file_processing_block(NEW_PDF, file, is_done):
 
 def handle_extraction_button(file, path, has_user):
     if st.button("🔍 Extraire et afficher les données", key=f"extract_{file}"):
+        print(f"🔍 Extraction des données pour {file}...")
         df = extract_all_transactions(path, has_user=has_user)
+        print(f"✅ Extraction terminée pour {file}.")
         df["source_file"] = file
         df["date_source_file"] = df["source_file"].str[:7]
         df["reimbursed"] = None
