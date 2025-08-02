@@ -37,7 +37,7 @@ client = connect_to_nextcloud()
 #### Verfiier si fichier de conf existe. 
 if client:
     # Étape 1 : vérifier la config
-    source_folder, working_folder = verify_config(client) ### j'ens suis là
+    source_folder, working_folder = verify_config(client)
     st.write("La config existe")
     st.write(source_folder)
     st.write(working_folder)
