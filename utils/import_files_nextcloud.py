@@ -35,7 +35,7 @@ def download_pdf(client, remote_folder, file_name, local_subfolder):
 
     try:
         client.download_sync(remote_path=remote_path, local_path=local_path)
-        st.success(f"📥 Fichier téléchargé : {file_name}")
+        st.success(f"📥 Fichier téléchargé : {file_name} de {remote_path} à {local_path}")
     except Exception as e:
         st.error(f"❌ Erreur lors du téléchargement de {file_name} : {e}")
 
