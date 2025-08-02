@@ -50,15 +50,13 @@ def display_file_processing_block(client, remote_folder, local_subfolder, file, 
 
     with st.expander("🔧 Traiter ce fichier", expanded=True):
         download_pdf(client, remote_folder, file, local_subfolder)
-        path = os.path.join("cache",local_subfolder)
+        path = os.path.join(".cache",local_subfolder)
         path_file = os.path.join(path, file)
         pdf_display(path_file)
 
         has_user = st.checkbox("Contient la section 'Cardholders and their references' ?", key=f"user_col_{file}")
 
-        handle_extraction_button(file, path, has_user)
-        print("handle_extraction_button", file, path, has_user)
-
+        handle_extraction_button(file, path_file, has_user)
 
                 # Suite logique après extraction
         if not st.session_state.get(f"extracted_{file}", False):
