@@ -5,7 +5,8 @@ from utils.new_nextcloud_tools import (
 
 st.title("📑 Visualiser PDF Nextcloud")
 
-
+st.session_state.setdefault("selected_pdf", None)
+st.session_state.setdefault("connect_validated", None)
 LOCAL_ALL_PDF = "data/all_pdf/"
 ####### fonction ##########
 
@@ -59,9 +60,6 @@ def pdf_display_local(pdf_path):
 
 
 # ────────────── 🚀 APP STREAMLIT ──────────────
-
-st.session_state.setdefault("selected_pdf", None)
-st.session_state.setdefault("connect_validated", None)
 
 if st.session_state["connect_validated"]:
     client = st.session_state["client"]
