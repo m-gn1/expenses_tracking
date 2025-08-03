@@ -82,8 +82,8 @@ imported_csv_remote = list_remote_csv_files(client, imported_folder_csv)
 imported_csv_local = list_processed_files(local_imported_folder_csv)
 if all(file in imported_csv_remote for file in imported_csv_local):
     st.success(f"✅ Tous les fichiers présents dans {imported_folder_csv} sont presents dans le cache local `{local_imported_folder_csv}`")
-    st.write("Voici les fichiers importés :")
-    st.write(imported_csv_local)
+    st.write("Voici les fichiers remote :")
+    st.write(imported_csv_remote)
 else:
     missing = [file for file in imported_csv_remote if file not in imported_csv_local]
     st.warning(f"⚠️ Il reste {len(missing)} fichier(s) à extraire : {', '.join(missing)}")
