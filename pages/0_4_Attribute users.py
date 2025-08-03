@@ -153,7 +153,7 @@ if st.button("💾 Sauvegarder ce fichier assigné", key="save_full_df"):
     final_full_df = st.session_state["full_df"]
     final_full_df.to_csv(output_path_imported_cache, index=False)
     st.success(f"Fichier sauvegardé dans {output_path_imported_cache}")
-    save_df_to_nextcloud_csv(client, final_full_df, processed_folder)
+    save_df_to_nextcloud_csv(client, final_full_df, processed_folder, name_processed_df)
     clear_remote_folder(client, imported_folder_csv)
 ## retirer les fichiers de imported data ##
     for fichier in os.listdir(local_imported_folder_csv):
