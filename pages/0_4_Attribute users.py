@@ -90,6 +90,7 @@ missing = [f for f in imported_csv_remote if f not in imported_csv_local]
 if not imported_csv_local:
     st.warning("⚠️ Le dossier cache local est vide.")
     sync_from_nextcloud_to_server(client, imported_folder_csv, local_imported_folder_csv)
+    st.info("📥 Synchronisation du dossier distant vers le cache local.")
     imported_csv_local_new = list_processed_files(local_imported_folder_csv)
     st.write(imported_csv_local_new)
 elif missing:
