@@ -6,6 +6,7 @@ import tempfile
 import os
 import base64
 import shutil
+import pandas as pd
 
 
 
@@ -316,7 +317,8 @@ def check_if_existing_processed_file_remote(client, remote_processed_path, name_
 
             # 2. Télécharger le fichier depuis Nextcloud
             client.download_sync(remote_path=remote_file_path, local_path=local_file_path)
-
+            st.success(f"✅ Fichier traité trouvé et téléchargé : {remote_file_path} → {local_file_path}")
+            
             # 3. Lire et retourner le DataFrame
             df = pd.read_csv(local_file_path)
             return df
