@@ -140,26 +140,26 @@ else:
     cardholders = full_df["cardholder"].dropna().unique()
     st.session_state["cardholders"] = cardholders
 
-assign_missing_users(FOYER, full_df_key="full_df", cardholders_key="cardholders")
-# Affichage si tout est rempli
-if st.session_state["full_df"]["user"].notna().all():
-    st.success("✅ Toutes les lignes ont un utilisateur affecté.")
-    st.session_state["full_df"] = full_df
-    st.dataframe(st.session_state["full_df"], use_container_width=True)
+# assign_missing_users(FOYER, full_df_key="full_df", cardholders_key="cardholders")
+# # Affichage si tout est rempli
+# if st.session_state["full_df"]["user"].notna().all():
+#     st.success("✅ Toutes les lignes ont un utilisateur affecté.")
+#     st.session_state["full_df"] = full_df
+#     st.dataframe(st.session_state["full_df"], use_container_width=True)
 
-# Sauvegarder
-if st.button("💾 Sauvegarder ce fichier assigné", key="save_full_df"):
-    output_path_imported_cache = os.path.join(local_processed_folder, name_processed_df)
-    final_full_df = st.session_state["full_df"]
-    final_full_df.to_csv(output_path_imported_cache, index=False)
-    st.success(f"Fichier sauvegardé dans {output_path_imported_cache}")
-    save_df_to_nextcloud_csv(client, final_full_df, processed_folder)
-    clear_remote_folder(client, imported_folder_csv)
-## retirer les fichiers de imported data ##
-    for fichier in os.listdir(local_imported_folder_csv):
-        chemin_complet = os.path.join(local_imported_folder_csv, fichier)
-        if os.path.isfile(chemin_complet):
-            os.remove(chemin_complet)
-    st.session_state["full_df"] = final_full_df
-    st.rerun()
+# # Sauvegarder
+# if st.button("💾 Sauvegarder ce fichier assigné", key="save_full_df"):
+#     output_path_imported_cache = os.path.join(local_processed_folder, name_processed_df)
+#     final_full_df = st.session_state["full_df"]
+#     final_full_df.to_csv(output_path_imported_cache, index=False)
+#     st.success(f"Fichier sauvegardé dans {output_path_imported_cache}")
+#     save_df_to_nextcloud_csv(client, final_full_df, processed_folder)
+#     clear_remote_folder(client, imported_folder_csv)
+# ## retirer les fichiers de imported data ##
+#     for fichier in os.listdir(local_imported_folder_csv):
+#         chemin_complet = os.path.join(local_imported_folder_csv, fichier)
+#         if os.path.isfile(chemin_complet):
+#             os.remove(chemin_complet)
+#     st.session_state["full_df"] = final_full_df
+#     st.rerun()
 
