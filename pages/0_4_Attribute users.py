@@ -113,7 +113,7 @@ elif existing_df is not None:
     st.success(f"Pas d'autre fichiers à part {name_processed_df} n'a été ajouté")
 else:
     st.error("❌ il n'y a aucun fichier à traiter")
-        st.page_link("pages/0_1_NEW Synchro NC cache working.py", label="🔐 Aller à la page de connexion")
+    st.page_link("pages/0_1_NEW Synchro NC cache working.py", label="🔐 Aller à la page de connexion")
 
 
 
