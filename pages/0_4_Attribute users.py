@@ -10,7 +10,8 @@ from utils.ui_helpers import clear_cache_on_page_change
 from utils.new_nextcloud_tools import (
     load_config,
     list_remote_pdf_files, 
-    list_remote_csv_files)
+    list_remote_csv_files,
+    check_if_existing_processed_file_remote)
 from utils.import_files_nextcloud import display_file_processing_block, import_pdf_file
 # from config import IMPORTED_FOLDER, PROCESSED_PDF
 # from config import REMOTE_IMPORTED_FOLDER, REMOTE_PROCESSED_PDF, REMOTE_PROCESSED_PATH, LOCAL_NEW_PDF
@@ -54,8 +55,11 @@ if config:
     working_folder = config.get("working_folder")
 
 processed_folder_pdf = working_folder+"/"+REMOTE_PROCESSED_PDF
+processed_folder = working_folder+"/"+REMOTE_PROCESSED_PATH
 imported_folder_csv = working_folder+"/"+REMOTE_IMPORTED_FOLDER
 local_imported_folder_csv = os.path.join(".cache/", REMOTE_IMPORTED_FOLDER)
+local_processed_folder = os.path.join(".cache/", REMOTE_PROCESSED_PATH)
+name_processed_df = "expenses_data.csv"
 
 st.title("📄 Affectation manuelle des utilisateurs")
 all_dfs = []
@@ -78,11 +82,9 @@ else:
     st.warning(f"⚠️ Il reste {len(missing)} fichier(s) à extraire : {', '.join(missing)}")
 
 ### Check if a file already exists
-# nb_df = 0
-# existing_df = check_if_existing_processed_file(processed_path, name_df)
-# if existing_df is not None:
-#     all_dfs.append(existing_df)
-#     nb_df = 1
-#     st.info(f"Il y a déjà eu un fichier processé : {name_df}")
-
-
+nb_df = 0
+existing_df = check_if_existing_processed_file_remote(client, processed_folder, name_processed_df, local_processed_folder)
+if existing_df is not None:
+    all_dfs.append(existing_df)
+    nb_df = 1
+    st.info(f"Il y a déjà eu un fichier processé : {name_processed_df}")

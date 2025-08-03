@@ -5,7 +5,8 @@ from webdav3.client import Client
 import tempfile
 import os
 import base64
-import io
+import shutil
+
 
 
 CONFIG_PATH = ".cache/config_nextcloud.json"
@@ -292,8 +293,39 @@ def list_remote_csv_files(client, pdf_folder):
     list_csv = [f for f in client.list(pdf_folder) if f.lower().endswith('.csv')]
     return list_csv
 
+def check_if_existing_processed_file_remote(client, remote_processed_path, name_df, cache_processed_path):
+    """
+    Vérifie si un fichier traité existe sur Nextcloud. Si oui :
+    - Vide le cache local
+    - Copie le fichier distant dans le cache local
+    - Charge et retourne le DataFrame
+    Sinon, retourne None
+    """
 
-import os
+    remote_file_path = f"{remote_processed_path.rstrip('/')}/{name_df}"
+    local_file_path = os.path.join(cache_processed_path, name_df)
+
+    # Vérifie si le fichier existe dans le dossier distant
+    try:
+        remote_files = client.list(remote_processed_path)
+        if name_df in [f.strip("/").split("/")[-1] for f in remote_files if not f.endswith("/")]:
+            # 1. Vider le cache local
+            if os.path.exists(cache_processed_path):
+                shutil.rmtree(cache_processed_path)
+            os.makedirs(cache_processed_path, exist_ok=True)
+
+            # 2. Télécharger le fichier depuis Nextcloud
+            client.download_sync(remote_path=remote_file_path, local_path=local_file_path)
+
+            # 3. Lire et retourner le DataFrame
+            df = pd.read_csv(local_file_path)
+            return df
+        else:
+            return None
+    except Exception as e:
+        st.error(f"❌ Erreur lors de la vérification ou du téléchargement du fichier : {e}")
+        return None
+    
 
 def create_local_subfolders(base_local_folder: str, subfolder_paths: list):
     """
