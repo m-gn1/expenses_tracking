@@ -67,7 +67,7 @@ st.title("📦 Updating categories")
 # if openai_api_key:
 #     st.session_state["openai_api_key"] = openai_api_key
 
-get_clef_openAI()
+get_clef_openAI(defaut="/Londres_shared/Bank/app_working_directory/open_ai_key.txt")
 ## fin clef open AII
 
 

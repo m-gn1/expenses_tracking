@@ -475,9 +475,9 @@ def clear_local_folder(folder_path):
         except Exception as e:
             print(f"Erreur lors de la suppression de {item_path} : {e}")
 
-def get_clef_openAI():
+def get_clef_openAI(defaut):
     st.header("🔐 Clé OpenAI depuis Nextcloud")
-    key_file_path = st.text_input("📄 Chemin du fichier distant contenant la clé OpenAI (dans Nextcloud)", value="/Londres_shared/Bank/app_working_directory/open_ai_key.txt")
+    key_file_path = st.text_input("📄 Chemin du fichier distant contenant la clé OpenAI (dans Nextcloud)", value=defaut)
 
 
     if st.button("📥 Charger la clé depuis Nextcloud") and key_file_path:
