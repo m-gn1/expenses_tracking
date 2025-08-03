@@ -6,7 +6,8 @@ from utils.new_nextcloud_tools import (
     load_config,
     check_if_existing_processed_file_remote, 
     clear_local_folder,
-    save_df_to_nextcloud_csv)
+    save_df_to_nextcloud_csv, 
+    get_clef_openAI)
 from utils.nextcloud_helpers import sync_from_nextcloud_to_server
 from utils.models import classify_expenses_learning, classify_expenses_learning_require_key
 
@@ -57,14 +58,16 @@ st.dataframe (df)
 st.title("📦 Updating categories")
 
 ## clef open AI
-st.dataframe(df["categories"].value_counts())
-st.header("🔐 Clé OpenAI")
-st.text("Cette clé est utilisée pour classifier les dépenses avec GPT.")
-openai_api_key = st.text_input("Entre ta clé OpenAI", type="password")
+# st.dataframe(df["categories"].value_counts())
+# st.header("🔐 Clé OpenAI")
+# st.text("Cette clé est utilisée pour classifier les dépenses avec GPT.")
+# openai_api_key = st.text_input("Entre ta clé OpenAI", type="password")
 
-# Mémoriser dans session_state si saisie
-if openai_api_key:
-    st.session_state["openai_api_key"] = openai_api_key
+# # Mémoriser dans session_state si saisie
+# if openai_api_key:
+#     st.session_state["openai_api_key"] = openai_api_key
+
+get_clef_openAI()
 ## fin clef open AII
 
 

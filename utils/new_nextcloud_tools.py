@@ -474,3 +474,30 @@ def clear_local_folder(folder_path):
                 shutil.rmtree(item_path)
         except Exception as e:
             print(f"Erreur lors de la suppression de {item_path} : {e}")
+
+def get_clef_openAI():
+    st.header("🔐 Clé OpenAI depuis Nextcloud")
+    key_file_path = st.text_input("📄 Chemin du fichier distant contenant la clé OpenAI (dans Nextcloud)", value="/Londres_shared/Bank/app_working_directory/open_ai_key.txt")
+
+
+    if st.button("📥 Charger la clé depuis Nextcloud") and key_file_path:
+        try:
+            # Récupérer le client
+            client = st.session_state.get("client")
+            if not client:
+                st.error("❌ Client Nextcloud non connecté.")
+                st.stop()
+
+            # Télécharger le contenu du fichier distant temporairement dans .cache
+            local_key_path = os.path.join(".cache", "openai_key.txt")
+            client.download_sync(remote_path=key_file_path, local_path=local_key_path)
+
+            # Lire la clé
+            with open(local_key_path, "r") as f:
+                openai_key = f.read().strip()
+                st.session_state["openai_api_key"] = openai_key
+                st.success("✅ Clé OpenAI chargée avec succès depuis Nextcloud !")
+
+        except Exception as e:
+            st.error(f"❌ Erreur lors du chargement du fichier : {e}")
+
