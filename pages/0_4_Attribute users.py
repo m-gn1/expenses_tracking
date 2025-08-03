@@ -137,8 +137,8 @@ else:
     df_wo_users = full_df[full_df['user'].isna()]
     st.dataframe(df_wo_users)
     st.session_state["full_df"] = full_df
-    st.dataframe(full_df)
-   #cardholders = full_df["cardholder"].dropna().unique()
+    cardholders = full_df["cardholder"].dropna().unique()
+    st.write(cardholders)
     #st.session_state["cardholders"] = cardholders
 
 # assign_missing_users(FOYER, full_df_key="full_df", cardholders_key="cardholders")
