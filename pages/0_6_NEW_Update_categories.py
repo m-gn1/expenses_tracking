@@ -22,7 +22,7 @@ st.session_state.setdefault("working_folder", None)
 
 ####### CLEAR CACHE ########
 # Identifier cette page par un nom unique
-CURRENT_PAGE = "0_5_NEW_Update_categories.py"  # ex: "Importer", "Analyse", "Résultats"
+CURRENT_PAGE = "0_6_NEW_Update_categories.py"  # ex: "Importer", "Analyse", "Résultats"
 clear_cache_on_page_change(CURRENT_PAGE, preserve_keys=["connect_validated", "client", "source_folder", "working_folder"])
 
 if st.session_state["connect_validated"]:
@@ -49,11 +49,9 @@ clear_local_folder(local_processed_folder)
 sync_from_nextcloud_to_server(client, processed_folder, local_processed_folder)
 existing_df = check_if_existing_processed_file_remote(client, processed_folder, name_processed_df, local_processed_folder)
 
-df_test = existing_df.drop_duplicates(subset="transaction_ID")
-st.dataframe(df_test)
+df = existing_df.drop_duplicates(subset="transaction_ID")
 
 ### CATEGORIES ###
-df = df_test[:10].copy()
 st.dataframe (df)
 st.title("📦 Updating categories")
 
