@@ -35,6 +35,7 @@ st.session_state.setdefault("connect_validated", None)
 st.session_state.setdefault("client", None)
 st.session_state.setdefault("source_folder", None)
 st.session_state.setdefault("working_folder", None)
+st.session_state.setdefault("full_df", None)
 
 ####### CLEAR CACHE ########
 # Identifier cette page par un nom unique
@@ -97,6 +98,7 @@ nb_df = 0
 existing_df = check_if_existing_processed_file_remote(client, processed_folder, name_processed_df, local_processed_folder)
 if existing_df is not None:
     all_dfs.append(existing_df)
+    st.session_state["full_df"] = None
     nb_df = 1
     st.info(f"Il y a déjà eu un fichier processé : {name_processed_df}")
 else:
@@ -113,6 +115,7 @@ if os.listdir(local_imported_folder_csv):
             path_df = os.path.join(local_imported_folder_csv, file)
             df = pd.read_csv(path_df)
             all_dfs.append(df)
+            st.session_state["full_df"] = None
             st.info(f"Le fichier {file} n'a pas d'users assignés.")
     st.info(f"Il y a {len(all_dfs)-nb_df} fichiers sans users assignés.")
 elif existing_df is not None:
@@ -121,15 +124,19 @@ else:
     st.error("❌ il n'y a aucun fichier à traiter")
     st.page_link("pages/0_1_NEW Synchro NC cache working.py", label="🔐 Aller à la page de connexion")
 
-### CONCAT ##
-full_df = concat_dataframes(*all_dfs)
-st.write("Voici le fichier à assigner")
-df_wo_users = full_df[full_df['user'].isna()]
-st.dataframe(df_wo_users)
-st.session_state["full_df"] = full_df
-cardholders = full_df["cardholder"].dropna().unique()
-st.write(cardholders)
-st.session_state["cardholders"] = cardholders
+if "full_df" in st.session_state and st.session_state["full_df"] is not None:
+    full_df = st.session_state["full_df"]
+    st.write("le df est dans session.state")
+    st.write(full_df['user'].unique())
+else:
+    full_df = concat_dataframes(*all_dfs)
+    st.write("Voici le fichier à assigner")
+    df_wo_users = full_df[full_df['user'].isna()]
+    st.dataframe(df_wo_users)
+    st.session_state["full_df"] = full_df
+    cardholders = full_df["cardholder"].dropna().unique()
+    st.write(cardholders)
+    st.session_state["cardholders"] = cardholders
 
 assign_missing_users(FOYER, full_df_key="full_df", cardholders_key="cardholders")
 # Affichage si tout est rempli
