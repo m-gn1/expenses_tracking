@@ -1,6 +1,7 @@
 import os
 import streamlit as st
 import pandas as pd
+import altair as alt
 from utils.ui_helpers import clear_cache_on_page_change, display_user_amount_boxes
 from utils.new_nextcloud_tools import (
     load_config,
