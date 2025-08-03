@@ -8,7 +8,7 @@ from utils.new_nextcloud_tools import (
     clear_local_folder,
     save_df_to_nextcloud_csv)
 from utils.nextcloud_helpers import sync_from_nextcloud_to_server
-from utils.models import classify_expenses_learning
+from utils.models import classify_expenses_learning, classify_expenses_learning_require_key
 
 REMOTE_PROCESSED_PATH = "data/processed/"
 
@@ -65,7 +65,7 @@ else:
         manage_categories()
         if st.button("⚙️ Lançons la machine", key="ia"):
             df["predicted_category"] = df.apply(
-                lambda row: classify_expenses_learning(
+                lambda row: classify_expenses_learning_require_key(
                     row["description"],
                     st.session_state["list_categories"],  # ou une liste de ton choix
                     existing_category=row["categories"] if pd.notnull(row["categories"]) else None

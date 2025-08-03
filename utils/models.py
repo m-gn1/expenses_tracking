@@ -28,3 +28,41 @@ assign the most suited category. To help you, here are some specificities:
         temperature=0
     )
     return response.choices[0].message.content.strip()
+
+
+import streamlit as st
+from openai import OpenAI
+
+def classify_expenses_learning_require_key(desc, categories, existing_category=None):
+    # 🔐 Saisie de la clé API OpenAI par l'utilisateur
+    if "openai_api_key" not in st.session_state:
+        st.session_state["openai_api_key"] = st.text_input("🔑 Entre ta clé OpenAI", type="password")
+
+    if not st.session_state["openai_api_key"]:
+        st.warning("Merci de renseigner ta clé OpenAI pour continuer.")
+        st.stop()
+
+    # Création du client avec la clé saisie
+    client = OpenAI(api_key=st.session_state["openai_api_key"])
+
+    categories_list = ", ".join(categories)
+
+    prompt = f"""Here is my category list: {categories_list}.
+From the following description: "{desc}",
+assign the most suited category. To help you, here are some specificities: 
+- When it comes to shop items for the house, put the "Furniture" category (such as John Lewis)
+- When it comes to dinner at a restaurant or drinks, put the "Entertainment" category
+- Monthly membership fee is a Barclays fee, it should be assigned to "Home & Bills"
+"""
+
+    if existing_category:
+        prompt += f'\nThis description has already been classified before as: "{existing_category}". You should respect this assignment unless there is a clear mismatch.'
+
+    prompt += "\nReturn only the name of the category."
+
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0
+    )
+    return response.choices[0].message.content.strip()
