@@ -10,10 +10,7 @@ from utils.import_files import list_processed_files, display_processed_summary, 
 from utils.ui_helpers import clear_cache_on_page_change, assign_missing_users
 from utils.new_nextcloud_tools import (
     load_config,
-    list_remote_pdf_files, 
-    list_remote_csv_files,
     check_if_existing_processed_file_remote, 
-    save_df_to_nextcloud_csv, 
     clear_local_folder)
 from utils.import_files_nextcloud import display_file_processing_block, import_pdf_file
 from utils.helpers import concat_dataframes
