@@ -117,18 +117,18 @@ else:
 
 
 
-# if "full_df" in st.session_state and st.session_state["full_df"] is not None:
-#     full_df = st.session_state["full_df"]
-#     st.write("le df est dans session.state")
-#     st.write(full_df['user'].unique())
-# else:
-#     full_df = concat_dataframes(*all_dfs)
-#     st.write("Voici le fichier à assigner")
-#     df_wo_users = full_df[full_df['user'].isna()]
-#     st.dataframe(df_wo_users)
-#     st.session_state["full_df"] = full_df
-#     cardholders = full_df["cardholder"].dropna().unique()
-#     st.session_state["cardholders"] = cardholders
+if "full_df" in st.session_state and st.session_state["full_df"] is not None:
+    full_df = st.session_state["full_df"]
+    st.write("le df est dans session.state")
+    st.write(full_df['user'].unique())
+else:
+    full_df = concat_dataframes(*all_dfs)
+    st.write("Voici le fichier à assigner")
+    df_wo_users = full_df[full_df['user'].isna()]
+    st.dataframe(df_wo_users)
+    st.session_state["full_df"] = full_df
+    cardholders = full_df["cardholder"].dropna().unique()
+    st.session_state["cardholders"] = cardholders
 
 # assign_missing_users(FOYER, full_df_key="full_df", cardholders_key="cardholders")
 # # Affichage si tout est rempli
