@@ -98,7 +98,6 @@ nb_df = 0
 existing_df = check_if_existing_processed_file_remote(client, processed_folder, name_processed_df, local_processed_folder)
 if existing_df is not None:
     all_dfs.append(existing_df)
-    st.session_state["full_df"] = None
     nb_df = 1
     st.info(f"Il y a déjà eu un fichier processé : {name_processed_df}")
 else:
@@ -115,7 +114,6 @@ if os.listdir(local_imported_folder_csv):
             path_df = os.path.join(local_imported_folder_csv, file)
             df = pd.read_csv(path_df)
             all_dfs.append(df)
-            st.session_state["full_df"] = None
             st.info(f"Le fichier {file} n'a pas d'users assignés.")
     st.info(f"Il y a {len(all_dfs)-nb_df} fichiers sans users assignés.")
 elif existing_df is not None:
