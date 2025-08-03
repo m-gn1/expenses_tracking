@@ -22,7 +22,7 @@ st.session_state.setdefault("working_folder", None)
 
 ####### CLEAR CACHE ########
 # Identifier cette page par un nom unique
-CURRENT_PAGE = "0_6_NEW_Update_categories.py"  # ex: "Importer", "Analyse", "Résultats"
+CURRENT_PAGE = "0_6_Attribute categories.py"  # ex: "Importer", "Analyse", "Résultats"
 clear_cache_on_page_change(CURRENT_PAGE, preserve_keys=["connect_validated", "client", "source_folder", "working_folder"])
 
 if st.session_state["connect_validated"]:
@@ -30,7 +30,7 @@ if st.session_state["connect_validated"]:
     st.info("🔓 Connecté à NextCloud")
 else:
     st.warning("⚠️ Connecte toi à NextCloud")
-    st.page_link("pages/0_1_NEW Synchro NC cache working.py", label="🔐 Aller à la page de connexion")
+    st.page_link("pages/0_1_Connection to NextCloud.py", label="🔐 Aller à la page de connexion")
 
 ###########################################
 

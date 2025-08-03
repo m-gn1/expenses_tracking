@@ -70,4 +70,4 @@ if st.session_state["connect_validated"]:
         pdf_display_local(st.session_state["selected_pdf_local"])
 else:
     st.warning("⚠️ Connecte toi à NextCloud")
-    st.page_link("pages/0_1_NEW Synchro NC cache working.py", label="🔐 Aller à la page de connexion")
+    st.page_link("pages/0_1_Connection to NextCloud.py", label="🔐 Aller à la page de connexion")

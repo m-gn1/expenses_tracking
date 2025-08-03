@@ -12,32 +12,32 @@ pages_info = [
     {
         "title": "0_Synchronisation_NextCloud",
         "description": "Synchronise les fichiers depuis NextCloud.",
-        "page": "pages/0_Synchronisation_NextCloud.py"
+        "page": "pages/0_1_Connection to NextCloud.py"
     },
     {
         "title": "1. Importer les fichiers",
         "description": "Charge les fichiers PDF de dépenses et les transforme en tableaux exploitables.",
-        "page": "pages/1_Importer_fichiers.py"
+        "page": "pages/0_3_ Import new files.py"
     },
     {
         "title": "2. Attribute users",
         "description": "Permet d'attribuer les dépenses à chaque user",
-        "page": "pages/2_Attribute_users.py"
+        "page": "pages/0_4_Attribute users to expenses.py"
     },
     {
         "title": "3_Personal Reimbursment",
         "description": "Annonce qui doit rembourser quoi, et l'état de remboursement.",
-        "page": "pages/3_Personal Reimbursment.py"
+        "page": "pages/0_5_Personal Reimbursment Expenses.py"
     },
     {
         "title": "4. Update categories",
         "description": "Automatise la création des catégories, et permet à l'utilisateur de les changer à la main",
-        "page": "pages/4_Update_categories.py"
+        "page": "pages/0_6_Attribute categories.py"
     },
     {
         "title": "5. Expenses",
         "description": "Permet de suivre les dépenses",
-        "page": "pages/5_Expenses.py"
+        "page": "pages/0_7_Show Expenses.py"
     }
 ]
 
