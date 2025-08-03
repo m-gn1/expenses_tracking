@@ -149,6 +149,7 @@ if st.session_state["full_df"]["user"].notna().all():
 if st.button("💾 Sauvegarder ce fichier assigné", key="save_full_df"):
     output_path_imported_cache = os.path.join(local_processed_folder, name_processed_df)
     final_full_df = st.session_state["full_df"]
+    st.dataframe(final_full_df, use_container_width=True)
     final_full_df.to_csv(output_path_imported_cache, index=False)
     st.success(f"Fichier sauvegardé dans {output_path_imported_cache}")
     save_df_to_nextcloud_csv(client, final_full_df, processed_folder, name_processed_df)
