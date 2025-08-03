@@ -9,7 +9,7 @@ from utils.new_nextcloud_tools import (
     save_df_to_nextcloud_csv, 
     get_clef_openAI)
 from utils.nextcloud_helpers import sync_from_nextcloud_to_server
-from utils.models import classify_expenses_learning, classify_expenses_learning_require_key
+from utils.models import classify_expenses_learning_require_key
 
 REMOTE_PROCESSED_PATH = "data/processed/"
 
