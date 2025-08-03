@@ -456,3 +456,21 @@ def clear_remote_folder(client, remote_folder):
     except Exception as e:
         st.error(f"❌ Erreur lors du vidage du dossier distant : {e}")
         return False
+
+def clear_local_folder(folder_path):
+    """
+    Supprime tous les fichiers et sous-dossiers dans un dossier local.
+    """
+    if not os.path.exists(folder_path):
+        print("Le dossier n'existe pas.")
+        return
+
+    for item in os.listdir(folder_path):
+        item_path = os.path.join(folder_path, item)
+        try:
+            if os.path.isfile(item_path) or os.path.islink(item_path):
+                os.remove(item_path)
+            elif os.path.isdir(item_path):
+                shutil.rmtree(item_path)
+        except Exception as e:
+            print(f"Erreur lors de la suppression de {item_path} : {e}")
