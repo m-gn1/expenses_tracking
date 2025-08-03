@@ -30,19 +30,12 @@ assign the most suited category. To help you, here are some specificities:
     return response.choices[0].message.content.strip()
 
 
-import streamlit as st
-from openai import OpenAI
-
 def classify_expenses_learning_require_key(desc, categories, existing_category=None):
-    # 🔐 Saisie de la clé API OpenAI par l'utilisateur
-    if "openai_api_key" not in st.session_state:
-        st.session_state["openai_api_key"] = st.text_input("🔑 Entre ta clé OpenAI", type="password")
-
-    if not st.session_state["openai_api_key"]:
-        st.warning("Merci de renseigner ta clé OpenAI pour continuer.")
+    if "openai_api_key" not in st.session_state or not st.session_state["openai_api_key"]:
+        st.warning("Merci de saisir ta clé OpenAI ci-dessus.")
         st.stop()
 
-    # Création du client avec la clé saisie
+    # Crée le client avec la clé saisie
     client = OpenAI(api_key=st.session_state["openai_api_key"])
 
     categories_list = ", ".join(categories)
@@ -60,9 +53,14 @@ assign the most suited category. To help you, here are some specificities:
 
     prompt += "\nReturn only the name of the category."
 
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0
-    )
-    return response.choices[0].message.content.strip()
+    # Appel OpenAI
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        st.error(f"Erreur lors de l'appel à OpenAI : {e}")
+        return None

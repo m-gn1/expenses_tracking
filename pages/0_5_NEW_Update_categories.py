@@ -56,26 +56,37 @@ df = df_test[:10].copy()
 st.dataframe (df)
 st.title("📦 Updating categories")
 
+## clef open AI
 st.dataframe(df["categories"].value_counts())
+st.header("🔐 Clé OpenAI")
+st.text("Cette clé est utilisée pour classifier les dépenses avec GPT.")
+openai_api_key = st.text_input("Entre ta clé OpenAI", type="password")
+
+# Mémoriser dans session_state si saisie
+if openai_api_key:
+    st.session_state["openai_api_key"] = openai_api_key
+## fin clef open AII
+
 
 if df["categories"].notnull().all():
     st.success("✅ Tout est catégorisé")
 else: 
     with st.expander("🤖 Je catégorise avec l'IA", expanded=True):        
         manage_categories()
-        if st.button("⚙️ Lançons la machine", key="ia"):
-            df["predicted_category"] = df.apply(
-                lambda row: classify_expenses_learning_require_key(
-                    row["description"],
-                    st.session_state["list_categories"],  # ou une liste de ton choix
-                    existing_category=row["categories"] if pd.notnull(row["categories"]) else None
-                ),
-                axis=1
-            )
-            st.dataframe (df)
-            st.dataframe(df["predicted_category"].value_counts())
-            st.dataframe(df["categories"].value_counts())
-            st.session_state["df_categories_ia"] = df
+        if "openai_api_key" in st.session_state:
+            if st.button("⚙️ Lançons la machine", key="ia"):
+                df["predicted_category"] = df.apply(
+                    lambda row: classify_expenses_learning_require_key(
+                        row["description"],
+                        st.session_state["list_categories"],  # ou une liste de ton choix
+                        existing_category=row["categories"] if pd.notnull(row["categories"]) else None
+                    ),
+                    axis=1
+                )
+                st.dataframe (df)
+                st.dataframe(df["predicted_category"].value_counts())
+                st.dataframe(df["categories"].value_counts())
+                st.session_state["df_categories_ia"] = df
 
 if "df_categories_mano" in st.session_state and st.session_state["df_categories_mano"] is not None:
     df_ia = st.session_state["df_categories_mano"].copy()
