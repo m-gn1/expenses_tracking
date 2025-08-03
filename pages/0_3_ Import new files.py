@@ -70,7 +70,7 @@ if active_file:
 
 if all(file in processed_pdf for file in new_pdf):
     st.success("✅ Tous les fichiers présents dans `data/new_pdf/` ont été traités et sauvegardés, prêt pour l'attribution")
-    st.page_link("pages/2_Attribute_users.py", label="➡️ Aller à l’attribution", icon="👤")
+    st.page_link("pages/0_4_Attribute users to expenses.py", label="➡️ Aller à l’attribution", icon="👤")
 else:
     missing = [file for file in new_pdf if file not in processed_pdf]
     st.warning(f"⚠️ Il reste {len(missing)} fichier(s) à extraire : {', '.join(missing)}")
