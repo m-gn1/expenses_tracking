@@ -37,7 +37,7 @@ if st.session_state["connect_validated"]:
     st.info("🔓 Connecté à NextCloud")
 else:
     st.warning("⚠️ Connecte toi à NextCloud")
-    st.page_link("pages/0_1_NEW Synchro NC cache working.py", label="🔐 Aller à la page de connexion")
+    st.page_link("pages/0_3_ NEW Importer_fichiers.py", label="🔐 Aller à la page de connexion")
 
 ###########################################
 
