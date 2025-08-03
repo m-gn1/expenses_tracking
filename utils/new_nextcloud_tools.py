@@ -318,12 +318,13 @@ def check_if_existing_processed_file_remote(client, remote_processed_path, name_
             # 2. Télécharger le fichier depuis Nextcloud
             client.download_sync(remote_path=remote_file_path, local_path=local_file_path)
             st.success(f"✅ Fichier traité trouvé et téléchargé : {remote_file_path} → {local_file_path}")
-            
+
             # 3. Lire et retourner le DataFrame
             df = pd.read_csv(local_file_path)
             return df
         else:
             return None
+        
     except Exception as e:
         st.error(f"❌ Erreur lors de la vérification ou du téléchargement du fichier : {e}")
         return None
@@ -428,3 +429,30 @@ def save_df_to_nextcloud_csv(client, df, remote_folder, filename):
     except Exception as e:
         st.error(f"❌ Erreur lors de l'enregistrement du CSV : {e}")
 
+def clear_remote_folder(client, remote_folder):
+    """
+    Supprime tous les fichiers d'un dossier distant Nextcloud.
+    
+    Paramètres :
+    - client : client Nextcloud (webdav3.client.Client)
+    - remote_folder : chemin du dossier distant (ex: "/dossier/traité")
+
+    Retourne : True si succès, False sinon.
+    """
+    try:
+        files = client.list(remote_folder)
+        files_to_delete = [f for f in files if not f.endswith("/")]  # Fichiers uniquement
+
+        if not files_to_delete:
+            st.info("📂 Aucun fichier à supprimer dans le dossier distant.")
+            return True
+
+        for f in files_to_delete:
+            full_path = f if f.startswith(remote_folder) else f"{remote_folder.rstrip('/')}/{f.strip('/')}"
+            client.clean(full_path)
+            st.success(f"🗑️ Supprimé : {full_path}")
+
+        return True
+    except Exception as e:
+        st.error(f"❌ Erreur lors du vidage du dossier distant : {e}")
+        return False
