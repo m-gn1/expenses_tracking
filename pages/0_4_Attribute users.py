@@ -16,6 +16,7 @@ from utils.new_nextcloud_tools import (
     clear_remote_folder)
 from utils.import_files_nextcloud import display_file_processing_block, import_pdf_file
 from utils.helpers import concat_dataframes
+from utils.nextcloud_helpers import sync_from_nextcloud_to_server
 
 # from config import IMPORTED_FOLDER, PROCESSED_PDF
 # from config import REMOTE_IMPORTED_FOLDER, REMOTE_PROCESSED_PDF, REMOTE_PROCESSED_PATH, LOCAL_NEW_PDF
@@ -78,6 +79,9 @@ else:
     st.page_link("pages/1_Importer_fichiers.py", label="➡️ Aller à l’import")
 
 # Check if all files from the remote imported folder exist in the local imported folder
+
+##### TO DO: check cacher folder, copy paste files from remote to local cache #####
+## DEBUG HERE ## 
 imported_csv_remote = list_remote_csv_files(client, imported_folder_csv)
 imported_csv_local = list_processed_files(local_imported_folder_csv)
 
@@ -85,6 +89,9 @@ missing = [f for f in imported_csv_remote if f not in imported_csv_local]
 
 if not imported_csv_local:
     st.warning("⚠️ Le dossier cache local est vide.")
+    sync_from_nextcloud_to_server(client, imported_folder_csv, local_imported_folder_csv)
+    imported_csv_local_new = list_processed_files(local_imported_folder_csv)
+    st.write(imported_csv_local_new)
 elif missing:
     st.warning(f"⚠️ Il reste {len(missing)} fichier(s) à extraire : {', '.join(missing)}")
 else:
