@@ -276,11 +276,21 @@ def create_nested_subfolders_in_nextcloud(client, parent_folder: str, subfolder_
 
 
 
-def list_remote_pdf_files(client, NEW_PDF, PROCESSED_PDF):
+# def list_remote_pdf_files(client, NEW_PDF, PROCESSED_PDF):
+#     client = st.session_state["client"]
+#     new_pdf = [f for f in client.list(NEW_PDF) if f.lower().endswith('.pdf')]
+#     processed_pdf = [f for f in client.list(PROCESSED_PDF) if f.lower().endswith('.pdf')]
+#     return new_pdf, processed_pdf
+
+def list_remote_pdf_files(client, pdf_folder):
     client = st.session_state["client"]
-    new_pdf = [f for f in client.list(NEW_PDF) if f.lower().endswith('.pdf')]
-    processed_pdf = [f for f in client.list(PROCESSED_PDF) if f.lower().endswith('.pdf')]
-    return new_pdf, processed_pdf
+    list_pdf = [f for f in client.list(pdf_folder) if f.lower().endswith('.pdf')]
+    return list_pdf
+
+def list_remote_csv_files(client, pdf_folder):
+    client = st.session_state["client"]
+    list_csv = [f for f in client.list(pdf_folder) if f.lower().endswith('.csv')]
+    return list_csv
 
 
 import os

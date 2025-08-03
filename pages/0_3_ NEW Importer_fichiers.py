@@ -49,10 +49,12 @@ if config:
 processed_folder_pdf = working_folder+"/"+REMOTE_PROCESSED_PDF
 imported_folder_pdf = working_folder+"/"+REMOTE_IMPORTED_FOLDER
 
-new_pdf, processed_pdf = list_remote_pdf_files(client, source_folder, processed_folder_pdf)
+new_pdf = list_remote_pdf_files(client, source_folder)
 if not new_pdf:
     st.warning(f"Aucun fichier PDF trouvé dans {source_folder}")
     st.stop()
+
+processed_pdf = list_remote_pdf_files(client,processed_folder_pdf)
 
 st.title("📦 Monthly Ingestion of pdf files")
 
