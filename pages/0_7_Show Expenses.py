@@ -62,6 +62,7 @@ st.sidebar.header("Filters")
 
 available_months = sorted(df["date_source_file"].unique())
 available_users = sorted(df["user"].unique())
+available_categories = sorted(df["categories"].unique())
 
 selected_months = st.sidebar.multiselect(
     "Select months",
@@ -75,12 +76,19 @@ selected_users = st.sidebar.multiselect(
     default=available_users
 )
 
+selected_categories = st.sidebar.multiselect(
+    "Select categories",
+    options=available_categories,
+    default=available_categories
+)
+
 
 # --- Apply filters ---
 
 filters = {
     "date_source_file": selected_months,
     "user": selected_users,
+    "categories": selected_categories
 }
 
 filtered_df = filter_dataframe_categoriel(df, filters)

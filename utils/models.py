@@ -64,3 +64,5 @@ assign the most suited category. To help you, here are some specificities:
     except Exception as e:
         st.error(f"Erreur lors de l'appel à OpenAI : {e}")
         return None
+
+
