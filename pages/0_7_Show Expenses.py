@@ -179,7 +179,8 @@ bars = alt.Chart(last_month_by_user_category).mark_bar().encode(
     tooltip=["user", "categories", "amount"]
 )
 
-avg_line = alt.Chart(avg_12m_by_user_category).mark_point(size=100, filled=True).encode(
+#avg_line = alt.Chart(avg_12m_by_user_category).mark_point(size=100, filled=True).encode(
+avg_line = alt.Chart(avg_12m_by_user_category).mark_point(shape='cross', size=150, strokeWidth=2).encode(
     x=alt.X("user:N", title="User"),
     y=alt.Y("avg_amount:Q", title="Avg amount (£)"),
     color=alt.Color("categories:N", title="Category"),
@@ -187,6 +188,7 @@ avg_line = alt.Chart(avg_12m_by_user_category).mark_point(size=100, filled=True)
     detail="categories:N",
     tooltip=["user", "categories", "avg_amount"]
 )
+
 
 chart3 = alt.layer(bars, avg_line).properties(
     width=700,
