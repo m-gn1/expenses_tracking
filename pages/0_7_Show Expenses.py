@@ -155,13 +155,16 @@ st.title("📊 Données filtrables")
 
 # Filtres
 with st.expander("🔍 Filtres", expanded=True):
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
 
     with col1:
         nom_filter = st.multiselect("Name", options=selected_df["user"].unique(), default=list(selected_df["user"].unique()))
     with col2:
         cat_filter = st.multiselect("Categories", options=selected_df["categories"].unique(), default=list(selected_df["categories"].unique()))
     with col3:
+        #date_range = st.date_input("Plage of dates", [selected_df["date"].min(), selected_df["date"].max()])
+        year_filter = st.multiselect("Years", options=selected_df["date_source_file"].str[:4].unique(), default=list(selected_df["date_source_file"].str[:4].unique()))
+    with col4:
         #date_range = st.date_input("Plage of dates", [selected_df["date"].min(), selected_df["date"].max()])
         date_filter = st.multiselect("Dates", options=selected_df["date_source_file"].unique(), default=list(selected_df["date_source_file"].unique()))
 
