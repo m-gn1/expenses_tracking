@@ -131,6 +131,21 @@ last_month_by_user_category = (
     .agg({"amount": "sum"})
 )
 
+# --- Compute last 12 months average per user & category ---
+# Get the latest month from available months (YYYY_MM strings work lexicographically here)
+all_months_sorted = sorted(filtered_df["date_source_file"].unique())
+last_12_months = all_months_sorted[-12:]
+
+last_12m_df = filtered_df[
+    filtered_df["date_source_file"].isin(last_12_months)
+]
+
+avg_12m_by_user_category = (
+    last_12m_df
+    .groupby(["user", "categories"], as_index=False)
+    .agg(avg_amount=("amount", "mean"))
+)
+
 
 # --- Altair chart ---
 chart1 = alt.Chart(monthly_users).mark_bar().encode(
@@ -156,16 +171,26 @@ chart2 = alt.Chart(monthly_by_category).mark_bar().encode(
     title="💰 Monthly Expenses by Category (Grouped)"
 )
 
-chart3 = alt.Chart(last_month_by_user_category).mark_bar().encode(
+bars = alt.Chart(last_month_by_user_category).mark_bar().encode(
     x=alt.X("user:N", title="User"),
     y=alt.Y("amount:Q", title="Total amount (£)"),
     color=alt.Color("categories:N", title="Category"),
     xOffset="categories:N",
     tooltip=["user", "categories", "amount"]
-).properties(
+)
+
+avg_line = alt.Chart(avg_12m_by_user_category).mark_line(point=True).encode(
+    x=alt.X("user:N", title="User"),
+    y=alt.Y("avg_amount:Q", title="Avg amount (£)"),
+    color=alt.Color("categories:N", title="Category"),
+    detail="categories:N",
+    tooltip=["user", "categories", "avg_amount"]
+)
+
+chart3 = alt.layer(bars, avg_line).properties(
     width=700,
     height=400,
-    title=f"🧾 Last Month ({last_month}) Expenses by User & Category"
+    title=f"🧾 Last Month ({last_month}) vs 12M Avg by User & Category"
 )
 
 chart4 = alt.Chart(last_month_by_user_category).mark_bar().encode(
