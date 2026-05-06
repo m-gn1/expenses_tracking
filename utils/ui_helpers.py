@@ -242,7 +242,7 @@ def manage_categories():
     if "list_categories" not in st.session_state:
         st.session_state["list_categories"] = [
             "Food & Beverage", "Furniture", "Transport", "Shopping",
-            "Other", "Home & Bills", "Entertainment", "Vin", "Restaurant"
+            "Other", "Home & Bills", "Entertainment", "Vin", "Restaurant", "Holidays", "Family Transport"
         ]
 
     st.markdown("### 📂 Gérer les catégories")
