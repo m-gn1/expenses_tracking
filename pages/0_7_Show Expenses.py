@@ -179,7 +179,7 @@ bars = alt.Chart(last_month_by_user_category).mark_bar().encode(
     tooltip=["user", "categories", "amount"]
 )
 
-avg_line = alt.Chart(avg_12m_by_user_category).mark_line(point=True).encode(
+avg_line = alt.Chart(avg_12m_by_user_category).mark_point(size=100, filled=True).encode(
     x=alt.X("user:N", title="User"),
     y=alt.Y("avg_amount:Q", title="Avg amount (£)"),
     color=alt.Color("categories:N", title="Category"),
