@@ -118,6 +118,19 @@ monthly_users = (
     .agg({"amount": "sum"})
 )
 
+# --- Chart 3: Last month spending per category per user ---
+last_month = filtered_df["date_source_file"].max()
+
+last_month_df = filtered_df[
+    filtered_df["date_source_file"] == last_month
+]
+
+last_month_by_user_category = (
+    last_month_df
+    .groupby(["user", "categories"], as_index=False)
+    .agg({"amount": "sum"})
+)
+
 
 # --- Altair chart ---
 chart1 = alt.Chart(monthly_users).mark_bar().encode(
@@ -143,8 +156,21 @@ chart2 = alt.Chart(monthly_by_category).mark_bar().encode(
     title="💰 Monthly Expenses by Category (Grouped)"
 )
 
+chart3 = alt.Chart(last_month_by_user_category).mark_bar().encode(
+    x=alt.X("user:N", title="User"),
+    y=alt.Y("amount:Q", title="Total amount (£)"),
+    color=alt.Color("categories:N", title="Category"),
+    xOffset="categories:N",
+    tooltip=["user", "categories", "amount"]
+).properties(
+    width=700,
+    height=400,
+    title=f"🧾 Last Month ({last_month}) Expenses by User & Category"
+)
+
 st.altair_chart(chart1, use_container_width=True)
 st.altair_chart(chart2, use_container_width=True)
+st.altair_chart(chart3, use_container_width=True)
 
 ### Affciher tables filtrée ###
 
