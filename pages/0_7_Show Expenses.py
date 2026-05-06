@@ -168,9 +168,23 @@ chart3 = alt.Chart(last_month_by_user_category).mark_bar().encode(
     title=f"🧾 Last Month ({last_month}) Expenses by User & Category"
 )
 
+chart4 = alt.Chart(last_month_by_user_category).mark_bar().encode(
+    x=alt.X("categories:N", title="Category"),
+    y=alt.Y("amount:Q", title="Total amount (£)"),
+    color=alt.Color("user:N", title="User"),
+    xOffset="user:N",
+    tooltip=["categories", "user", "amount"]
+).properties(
+    width=700,
+    height=400,
+    title=f"🧾 Last Month ({last_month}) Expenses by Cat & User"
+)
+
+
 st.altair_chart(chart1, use_container_width=True)
 st.altair_chart(chart2, use_container_width=True)
 st.altair_chart(chart3, use_container_width=True)
+st.altair_chart(chart4, use_container_width=True)
 
 ### Affciher tables filtrée ###
 
