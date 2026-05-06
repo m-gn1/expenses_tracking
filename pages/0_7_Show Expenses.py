@@ -133,11 +133,11 @@ last_month_by_user_category = (
 
 # --- Compute last 12 months average per user & category ---
 # Get the latest month from available months (YYYY_MM strings work lexicographically here)
-all_months_sorted = sorted(filtered_df["date_source_file"].unique())
+all_months_sorted = sorted(df["date_source_file"].unique())
 last_12_months = all_months_sorted[-12:]
 
-last_12m_df = filtered_df[
-    filtered_df["date_source_file"].isin(last_12_months)
+last_12m_df = df[
+    df["date_source_file"].isin(last_12_months)
 ]
 
 avg_12m_by_user_category = (
