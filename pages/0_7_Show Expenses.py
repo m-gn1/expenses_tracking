@@ -183,6 +183,7 @@ avg_line = alt.Chart(avg_12m_by_user_category).mark_line(point=True).encode(
     x=alt.X("user:N", title="User"),
     y=alt.Y("avg_amount:Q", title="Avg amount (£)"),
     color=alt.Color("categories:N", title="Category"),
+    xOffset="categories:N",
     detail="categories:N",
     tooltip=["user", "categories", "avg_amount"]
 )
