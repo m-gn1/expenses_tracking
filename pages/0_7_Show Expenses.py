@@ -164,9 +164,16 @@ with st.expander("🔍 Filtres", expanded=True):
     with col3:
         #date_range = st.date_input("Plage of dates", [selected_df["date"].min(), selected_df["date"].max()])
         year_filter = st.multiselect("Years", options=selected_df["date_source_file"].str[:4].unique(), default=list(selected_df["date_source_file"].str[:4].unique()))
+        # Filter dates based on selected years
+        filtered_dates_df = selected_df[selected_df["date_source_file"].str[:4].isin(year_filter)]
+        available_dates = sorted(filtered_dates_df["date_source_file"].unique())
     with col4:
         #date_range = st.date_input("Plage of dates", [selected_df["date"].min(), selected_df["date"].max()])
-        date_filter = st.multiselect("Dates", options=selected_df["date_source_file"].unique(), default=list(selected_df["date_source_file"].unique()))
+        date_filter = st.multiselect(
+            "Dates",
+            options=available_dates,
+            default=available_dates
+        )
 
 
 # Application des filtres
