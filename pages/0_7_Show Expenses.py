@@ -61,7 +61,7 @@ st.title("Voici nos depenses")
 st.sidebar.header("Filters")
 
 available_years = sorted(df["date_source_file"].str[:4].unique())
-available_months = sorted(df["date_source_file"].unique())
+#available_months = sorted(df["date_source_file"].unique())
 available_users = sorted(df["user"].unique())
 available_categories = sorted(df["categories"].unique())
 
@@ -70,6 +70,10 @@ selected_years = st.sidebar.multiselect(
     options=available_years,
     default=available_years
 )
+# Filter months based on selected years
+filtered_months_df = df[df["date_source_file"].str[:4].isin(selected_years)]
+available_months = sorted(filtered_months_df["date_source_file"].unique())
+
 selected_months = st.sidebar.multiselect(
     "Select months",
     options=available_months,
