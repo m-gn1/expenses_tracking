@@ -181,8 +181,15 @@ else:
 
     elif mode_categorisation == "🧠 Pré-remplissage depuis l'existant puis vérification manuelle":
         valid_categories = st.session_state["list_categories"]
-        df_prefilled, category_mapping = prefill_categories_from_existing_data(df, valid_categories)
-        st.session_state["df_categories_mano"] = df_prefilled.copy()
+
+        if st.session_state.get("df_categories_mode") != mode_categorisation:
+            df_prefilled, category_mapping = prefill_categories_from_existing_data(df, valid_categories)
+            st.session_state["df_categories_mano"] = df_prefilled.copy()
+            st.session_state["df_categories_mode"] = mode_categorisation
+            st.session_state.cat_selections = {}
+        else:
+            df_prefilled = st.session_state["df_categories_mano"].copy()
+            category_mapping = build_category_mapping_from_descriptions(df_prefilled, valid_categories)
 
         nb_prefilled = df_prefilled.loc[
             df_prefilled["categories"].isna() & df_prefilled["predicted_category"].notna()
@@ -203,9 +210,13 @@ else:
             )
 
     else:
-        if "predicted_category" not in df.columns:
-            df["predicted_category"] = df["categories"]
-        st.session_state["df_categories_mano"] = df.copy()
+        if st.session_state.get("df_categories_mode") != mode_categorisation:
+            df_manual = df.copy()
+            if "predicted_category" not in df_manual.columns:
+                df_manual["predicted_category"] = None
+            st.session_state["df_categories_mano"] = df_manual.copy()
+            st.session_state["df_categories_mode"] = mode_categorisation
+            st.session_state.cat_selections = {}
         st.info("✍🏻 Mode manuel activé : tu peux choisir les catégories toi-même ci-dessous.")
 
 if "df_categories_mano" in st.session_state and st.session_state["df_categories_mano"] is not None:
@@ -226,14 +237,12 @@ if "df_categories_mano" in st.session_state or "df_categories_ia" in st.session_
         full_df = st.session_state.get("df_categories_mano")
         categories = sorted(st.session_state["list_categories"])
 
-    if full_df is None or full_df[col_to_assign].notna().all():
-        st.write("issue") # remove si fonction, et donc return. 
-        #return
+    if full_df is None:
+        st.stop()
 
     rows_to_fill = full_df[full_df[col_to_assign].isna()].copy()
     if rows_to_fill.empty:
-        st.write("issue")
-        #return
+        st.success("✅ Toutes les lignes ont une catégorie. Tu peux sauvegarder le fichier.")
 
     # ✅ Afficher message de succès si besoin
     if st.session_state.get("affectation_success"):
