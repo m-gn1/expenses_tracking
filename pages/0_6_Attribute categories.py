@@ -71,23 +71,42 @@ get_clef_openAI(defaut="/Londres_shared/Bank/app_working_directory/open_ai_key.t
 
 if df["categories"].notnull().all():
     st.success("✅ Tout est catégorisé")
-else: 
-    with st.expander("🤖 Je catégorise avec l'IA", expanded=True):        
-        manage_categories()
-        if "openai_api_key" in st.session_state:
-            if st.button("⚙️ Lançons la machine", key="ia"):
-                df["predicted_category"] = df.apply(
-                    lambda row: classify_expenses_learning_require_key(
-                        row["description"],
-                        st.session_state["list_categories"],  # ou une liste de ton choix
-                        existing_category=row["categories"] if pd.notnull(row["categories"]) else None
-                    ),
-                    axis=1
-                )
-                st.dataframe (df)
-                st.dataframe(df["predicted_category"].value_counts())
-                st.dataframe(df["categories"].value_counts())
-                st.session_state["df_categories_ia"] = df
+else:
+    mode_categorisation = st.radio(
+        "Comment veux-tu catégoriser les transactions ?",
+        options=[
+            "🤖 IA puis vérification manuelle",
+            "✍🏻 Vérification manuelle uniquement"
+        ],
+        key="mode_categorisation"
+    )
+
+    manage_categories()
+
+    if mode_categorisation == "🤖 IA puis vérification manuelle":
+        with st.expander("🤖 Je catégorise avec l'IA", expanded=True):
+            if "openai_api_key" in st.session_state:
+                if st.button("⚙️ Lançons la machine", key="ia"):
+                    df["predicted_category"] = df.apply(
+                        lambda row: classify_expenses_learning_require_key(
+                            row["description"],
+                            st.session_state["list_categories"],  # ou une liste de ton choix
+                            existing_category=row["categories"] if pd.notnull(row["categories"]) else None
+                        ),
+                        axis=1
+                    )
+                    st.dataframe(df)
+                    st.dataframe(df["predicted_category"].value_counts())
+                    st.dataframe(df["categories"].value_counts())
+                    st.session_state["df_categories_ia"] = df.copy()
+            else:
+                st.warning("⚠️ Ajoute une clé OpenAI pour utiliser la catégorisation IA.")
+
+    else:
+        if "predicted_category" not in df.columns:
+            df["predicted_category"] = df["categories"]
+        st.session_state["df_categories_mano"] = df.copy()
+        st.info("✍🏻 Mode manuel activé : tu peux choisir les catégories toi-même ci-dessous.")
 
 if "df_categories_mano" in st.session_state and st.session_state["df_categories_mano"] is not None:
     df_ia = st.session_state["df_categories_mano"].copy()
@@ -131,7 +150,7 @@ if "df_categories_mano" in st.session_state or "df_categories_ia" in st.session_
     with st.form("cat_assignment_form"):
         for i, row in rows_to_fill.iterrows():
             row_key = f"cat_{i}"
-            default = st.session_state.cat_selections.get(row_key, row["predicted_category"])
+            default = st.session_state.cat_selections.get(row_key, row.get("predicted_category", None))
             date_str = row["date"] if isinstance(row["date"], str) else row["date"].strftime("%Y-%m-%d")
             label = f"{date_str}| {row['transaction_ID']} |{row['user']} | {row['description']}| {row['categories']} | {row['amount']} £"
 
