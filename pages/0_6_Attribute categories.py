@@ -1,4 +1,5 @@
 import os
+from difflib import SequenceMatcher
 import streamlit as st
 import pandas as pd
 from utils.ui_helpers import clear_cache_on_page_change, manage_categories
@@ -51,6 +52,81 @@ existing_df = check_if_existing_processed_file_remote(client, processed_folder, 
 
 df = existing_df.drop_duplicates(subset="transaction_ID")
 
+
+def normalize_description(desc):
+    return str(desc).lower().strip()
+
+
+def build_category_mapping_from_descriptions(df, valid_categories):
+    mapping_df = df[df["categories"].notna()].copy()
+    mapping_df = mapping_df[mapping_df["categories"].isin(valid_categories)].copy()
+
+    if mapping_df.empty:
+        return {}
+
+    mapping_df["description_clean"] = mapping_df["description"].apply(normalize_description)
+
+    return (
+        mapping_df
+        .groupby("description_clean")["categories"]
+        .agg(lambda x: x.value_counts().idxmax())
+        .to_dict()
+    )
+
+
+def find_best_description_match(description, category_mapping, fuzzy_threshold=0.82):
+    description_norm = normalize_description(description)
+
+    if not description_norm or description_norm == "nan":
+        return None, None, None
+
+    for known_description, category in category_mapping.items():
+        if known_description in description_norm or description_norm in known_description:
+            return category, known_description, "contains"
+
+    best_category = None
+    best_description = None
+    best_score = 0
+
+    for known_description, category in category_mapping.items():
+        score = SequenceMatcher(None, description_norm, known_description).ratio()
+        if score > best_score:
+            best_score = score
+            best_category = category
+            best_description = known_description
+
+    if best_score >= fuzzy_threshold:
+        return best_category, best_description, f"fuzzy {best_score:.0%}"
+
+    return None, None, None
+
+
+def prefill_categories_from_existing_data(df, valid_categories):
+    df_prefilled = df.copy()
+
+    if "predicted_category" not in df_prefilled.columns:
+        df_prefilled["predicted_category"] = None
+
+    df_prefilled["matched_description"] = None
+    df_prefilled["matching_method"] = None
+
+    category_mapping = build_category_mapping_from_descriptions(df_prefilled, valid_categories)
+
+    mask_missing_category = df_prefilled["categories"].isna()
+
+    for idx, row in df_prefilled.loc[mask_missing_category].iterrows():
+        category, matched_description, matching_method = find_best_description_match(
+            row["description"],
+            category_mapping
+        )
+
+        if category is not None:
+            df_prefilled.at[idx, "predicted_category"] = category
+            df_prefilled.at[idx, "matched_description"] = matched_description
+            df_prefilled.at[idx, "matching_method"] = matching_method
+
+    return df_prefilled, category_mapping
+
 ### CATEGORIES ###
 st.dataframe (df)
 st.title("📦 Updating categories")
@@ -76,6 +152,7 @@ else:
         "Comment veux-tu catégoriser les transactions ?",
         options=[
             "🤖 IA puis vérification manuelle",
+            "🧠 Pré-remplissage depuis l'existant puis vérification manuelle",
             "✍🏻 Vérification manuelle uniquement"
         ],
         key="mode_categorisation"
@@ -101,6 +178,29 @@ else:
                     st.session_state["df_categories_ia"] = df.copy()
             else:
                 st.warning("⚠️ Ajoute une clé OpenAI pour utiliser la catégorisation IA.")
+
+    elif mode_categorisation == "🧠 Pré-remplissage depuis l'existant puis vérification manuelle":
+        valid_categories = st.session_state["list_categories"]
+        df_prefilled, category_mapping = prefill_categories_from_existing_data(df, valid_categories)
+        st.session_state["df_categories_mano"] = df_prefilled.copy()
+
+        nb_prefilled = df_prefilled.loc[
+            df_prefilled["categories"].isna() & df_prefilled["predicted_category"].notna()
+        ].shape[0]
+
+        st.info(
+            f"🧠 Pré-remplissage activé : {nb_prefilled} ligne(s) ont été pré-remplies "
+            "avec un matching contains/fuzzy sur les descriptions déjà catégorisées."
+        )
+
+        with st.expander("Voir les lignes pré-remplies", expanded=False):
+            st.dataframe(
+                df_prefilled.loc[
+                    df_prefilled["categories"].isna() & df_prefilled["predicted_category"].notna(),
+                    ["date", "transaction_ID", "user", "description", "amount", "predicted_category", "matched_description", "matching_method"]
+                ],
+                use_container_width=True
+            )
 
     else:
         if "predicted_category" not in df.columns:
