@@ -277,12 +277,29 @@ if "df_categories_mano" in st.session_state or "df_categories_ia" in st.session_
         st.rerun()
 
     if "df_categories_mano" in st.session_state and st.button("💾 Sauvegarder ce fichier modifié", key="save_full_df"):
-        final_full_df = st.session_state["df_categories_mano"]
-        
+        final_full_df = st.session_state["df_categories_mano"].copy()
+
+        # Sécurité : si certaines catégories sont encore vides mais qu'une catégorie prédite existe,
+        # on l'utilise avant la sauvegarde. Cela évite que le mode pré-remplissage reste bloqué
+        # si l'utilisateur n'a pas cliqué sur "Valider les affectations" avant de sauvegarder.
+        if "predicted_category" in final_full_df.columns:
+            mask_to_autofill = (
+                final_full_df["categories"].isna()
+                & final_full_df["predicted_category"].notna()
+                & final_full_df["predicted_category"].isin(st.session_state["list_categories"])
+            )
+            final_full_df.loc[mask_to_autofill, "categories"] = final_full_df.loc[mask_to_autofill, "predicted_category"]
+
         # Vérification que la colonne est bien remplie
         if final_full_df["categories"].isnull().any():
-            st.warning("⚠️ Certaines lignes n'ont pas encore de catégorie.")
+            missing_rows = final_full_df[final_full_df["categories"].isnull()].copy()
+            st.warning(f"⚠️ {len(missing_rows)} ligne(s) n'ont pas encore de catégorie.")
+            st.dataframe(
+                missing_rows[["date", "transaction_ID", "user", "description", "amount", "predicted_category"]],
+                use_container_width=True
+            )
         else:
+            st.session_state["df_categories_mano"] = final_full_df.copy()
             save_df_to_nextcloud_csv(client, final_full_df, processed_folder, name_processed_df)
             clear_local_folder(local_processed_folder)
             st.success(f"✅ Fichier sauvegardé dans {processed_folder}")
