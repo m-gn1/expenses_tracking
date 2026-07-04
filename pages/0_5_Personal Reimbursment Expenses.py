@@ -72,36 +72,36 @@ else:
     date_min = rows_to_reimbursed["date"].min()
     date_max = rows_to_reimbursed["date"].max()
 
-
-    source_reimb_manquant = sorted(rows_to_reimbursed["date_source_file"].dropna().unique())
-
-    st.write(
-        f"📅 Dates : de {date_min:%Y-%m-%d} à {date_max:%Y-%m-%d}, "
-        f"c'est à dire dans ces fichiers {source_reimb_manquant}"
-    )
-
+    source_reimb_manquant = sorted(rows_to_reimbursed["date_source_file"].unique())
+    st.write(f"📅 Dates : de {date_min} à {date_max}, c'est à dire dans ces fichiers {source_reimb_manquant}")
     default_checked = source_reimb_manquant
 
-    selected_files = st.multiselect(
-        "Fichiers à marquer comme remboursés",
-        options=source_reimb_manquant,
-        default=default_checked
-    )
 
-
-#    source_reimb_manquant = sorted(rows_to_reimbursed["date_source_file"].unique())
-#    st.write(f"📅 Dates : de {date_min} à {date_max}, c'est à dire dans ces fichiers {source_reimb_manquant}")
-#    default_checked = source_reimb_manquant
 
 #    selected_values = []
 #    unique_values = sorted(df["date_source_file"].unique())
 
+#    with st.container():
+#        cols = st.columns(len(unique_values))
+#        for i, val in enumerate(unique_values):
+#            is_checked = val in default_checked  # ✅ test si on doit précocher
+#            if cols[i].checkbox(val, value=is_checked):
+#                selected_values.append(val)
+
+
+    selected_values = []
+    unique_values = sorted(df["date_source_file"].dropna().unique())
+
+    n_cols = 4  # Nombre de colonnes d'affichage
+    cols = st.columns(n_cols)
+
     with st.container():
-        cols = st.columns(len(unique_values))
         for i, val in enumerate(unique_values):
-            is_checked = val in default_checked  # ✅ test si on doit précocher
-            if cols[i].checkbox(val, value=is_checked):
-                selected_values.append(val)
+            is_checked = val in default_checked
+
+            with cols[i % n_cols]:
+                if st.checkbox(str(val), value=is_checked, key=f"source_{val}"):
+                    selected_values.append(val)
 
     if selected_values:
         filtered_df = df[df["date_source_file"].isin(selected_values)]
