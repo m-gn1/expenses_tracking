@@ -186,7 +186,13 @@ else:
             df_prefilled, category_mapping = prefill_categories_from_existing_data(df, valid_categories)
             st.session_state["df_categories_mano"] = df_prefilled.copy()
             st.session_state["df_categories_mode"] = mode_categorisation
-            st.session_state.cat_selections = {}
+            st.session_state.cat_selections = {
+                f"cat_{idx}": row["predicted_category"]
+                for idx, row in df_prefilled.iterrows()
+                if pd.notna(row.get("predicted_category", None))
+                and row.get("predicted_category", None) in valid_categories
+                and pd.isna(row.get("categories", None))
+            }
         else:
             df_prefilled = st.session_state["df_categories_mano"].copy()
             category_mapping = build_category_mapping_from_descriptions(df_prefilled, valid_categories)
@@ -259,9 +265,18 @@ if "df_categories_mano" in st.session_state or "df_categories_ia" in st.session_
     with st.form("cat_assignment_form"):
         for i, row in rows_to_fill.iterrows():
             row_key = f"cat_{i}"
-            default = st.session_state.cat_selections.get(row_key, row.get("predicted_category", None))
+            predicted_category = row.get("predicted_category", None)
+            matched_description = row.get("matched_description", None)
+            matching_method = row.get("matching_method", None)
+
+            default = st.session_state.cat_selections.get(row_key, predicted_category)
             date_str = row["date"] if isinstance(row["date"], str) else row["date"].strftime("%Y-%m-%d")
-            label = f"{date_str}| {row['transaction_ID']} |{row['user']} | {row['description']}| {row['categories']} | {row['amount']} £"
+
+            label = f"{date_str} | {row['transaction_ID']} | {row['user']} | {row['description']} | {row['amount']} £"
+            if pd.notna(predicted_category):
+                label += f" | proposition: {predicted_category}"
+            if pd.notna(matched_description) and pd.notna(matching_method):
+                label += f" ({matching_method} avec: {matched_description})"
 
             selected = st.selectbox(
                 label,
