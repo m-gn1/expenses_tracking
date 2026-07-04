@@ -47,7 +47,8 @@ assign the most suited category. To help you, here are some specificities:
 - When it comes to dinner at a restaurant or drinks, put the "Entertainment" category
 - Monthly membership fee is a Barclays fee, it should be assigned to "Home & Bills
 - John Lewis is a shop for home items, it should be assigned to "Furniture
-- Gails, Waitrose, Bayleys should be assigned to Food & Beverage"
+- Gails, Waitrose, Bayleys should be assigned to Food & Beverage
+- Use previously assigned categories to help you classify new descriptions."
 """
 
     if existing_category:
