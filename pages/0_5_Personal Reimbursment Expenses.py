@@ -71,12 +71,30 @@ else:
     st.dataframe(rows_to_reimbursed)
     date_min = rows_to_reimbursed["date"].min()
     date_max = rows_to_reimbursed["date"].max()
-    source_reimb_manquant = sorted(rows_to_reimbursed["date_source_file"].unique())
-    st.write(f"📅 Dates : de {date_min} à {date_max}, c'est à dire dans ces fichiers {source_reimb_manquant}")
+
+
+    source_reimb_manquant = sorted(rows_to_reimbursed["date_source_file"].dropna().unique())
+
+    st.write(
+        f"📅 Dates : de {date_min:%Y-%m-%d} à {date_max:%Y-%m-%d}, "
+        f"c'est à dire dans ces fichiers {source_reimb_manquant}"
+    )
+
     default_checked = source_reimb_manquant
 
-    selected_values = []
-    unique_values = sorted(df["date_source_file"].unique())
+    selected_files = st.multiselect(
+        "Fichiers à marquer comme remboursés",
+        options=source_reimb_manquant,
+        default=default_checked
+    )
+
+
+#    source_reimb_manquant = sorted(rows_to_reimbursed["date_source_file"].unique())
+#    st.write(f"📅 Dates : de {date_min} à {date_max}, c'est à dire dans ces fichiers {source_reimb_manquant}")
+#    default_checked = source_reimb_manquant
+
+#    selected_values = []
+#    unique_values = sorted(df["date_source_file"].unique())
 
     with st.container():
         cols = st.columns(len(unique_values))
