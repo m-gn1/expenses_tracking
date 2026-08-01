@@ -302,6 +302,11 @@ if "df_categories_mano" in st.session_state or "df_categories_ia" in st.session_
 
     if "df_categories_mano" in st.session_state and st.button("💾 Sauvegarder ce fichier modifié", key="save_full_df"):
         final_full_df = st.session_state["df_categories_mano"].copy()
+        # Remove helper columns before saving
+        final_full_df = final_full_df.drop(
+            columns=["matched_description", "matching_method"],
+            errors="ignore"
+        )
 
         # Sécurité : si certaines catégories sont encore vides mais qu'une catégorie prédite existe,
         # on l'utilise avant la sauvegarde. Cela évite que le mode pré-remplissage reste bloqué
