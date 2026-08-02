@@ -236,31 +236,31 @@ def extract_transactions_from_line(line, has_user):
     """
 
     if has_user:
-        pattern = r"(\d{2} \w{3})\s+(\d{3})\s+(.+?)\s+£([\d,]+\.\d{2})"
+        pattern = r"(\d{2} \w{3})\s+(\d{3})\s+(.+?)\s+£([\d,]+\.\d{2})(CR)?"
         matches = list(re.finditer(pattern, line))
 
         transactions = []
         for match in matches:
-            date, cardholder, desc, amount = match.groups()
+            date, cardholder, desc, amount, credit = match.groups()
             if "Payment By Direct Debit" not in desc:
                 transactions.append({
                     "date": date.strip(),
                     "cardholder": cardholder.strip(),
                     "description": desc.strip(),
-                    "amount": float(amount.replace(",", ""))
+                    "amount": float(amount.replace(",", "")) if not credit else -float(amount.replace(",", ""))
                 })
     else:
         # Si pas de user, on n'extrait que date, description et montant
-        pattern = r"(\d{2} \w{3})\s+(.+?)\s+£([\d,]+\.\d{2})"
+        pattern = r"(\d{2} \w{3})\s+(.+?)\s+£([\d,]+\.\d{2})(CR)?"
         matches = list(re.finditer(pattern, line))
         transactions = []
         for match in matches:
-            date, desc, amount = match.groups()
+            date, desc, amount, credit = match.groups()
             if "Payment By Direct Debit" not in desc:
                 transactions.append({
                     "date": date.strip(),
                     "description": desc.strip(),
-                    "amount": float(amount.replace(",", ""))
+                    "amount": float(amount.replace(",", "")) if not credit else -float(amount.replace(",", ""))
                 })
     return transactions
 
