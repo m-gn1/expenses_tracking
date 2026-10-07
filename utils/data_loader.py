@@ -24,6 +24,12 @@ def add_month(df, date):
     df["month"] = df[date].dt.to_period("M").astype(str)
     return df
 
+def get_statement_year(pdf_path):
+    match = re.search(r'(?<!\d)(20\d{2})(?!\d)', Path(pdf_path).name)
+    if match:
+        return int(match.group(1))
+    raise ValueError(f"Impossible de déterminer l'année du relevé : {pdf_path}")
+
 def filter_by_date(df, start_date, end_date):
     """Return df filtered by start and end date."""
     return df[
@@ -289,7 +295,8 @@ def extract_all_transactions(pdf_path, has_user):
     # Convertir en DataFrame trié
     df = pd.DataFrame(transactions)
     if not df.empty:
-        df["date"] = pd.to_datetime(df["date"] + " 2025", format="%d %b %Y")
+        #df["date"] = pd.to_datetime(df["date"] + " 2025", format="%d %b %Y")
+        df["date"] = pd.to_datetime(df["date"] + f" {get_statement_year(pdf_path)}", format="%d %b %Y")
         df = df.sort_values("date").reset_index(drop=True)
 
     # Mapper le user
